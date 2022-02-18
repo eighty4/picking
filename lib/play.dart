@@ -22,7 +22,7 @@ class PlayScreen extends StatelessWidget {
             null,
             Note(1, 14, and: Note(2, 14))
           ]),
-          true)
+          last: true)
     );
   }
 }

@@ -2,6 +2,18 @@ library libtab;
 
 import 'package:flutter/widgets.dart';
 
+class TabContext {
+  final Color backgroundColor;
+  final Color lineColor;
+  final Color notationColor;
+
+  const TabContext({
+    this.backgroundColor = const Color.fromARGB(255, 255, 255, 255),
+    this.lineColor = const Color.fromARGB(255, 96, 125, 139),
+    this.notationColor = const Color.fromARGB(255, 0, 0, 0),
+  });
+}
+
 enum Chord { a, c, d, d7, f, g }
 
 enum Finger { t, m, i }
@@ -45,15 +57,12 @@ class Song {
   List<Measure> measures;
 }
 
-const colorBlack = Color.fromARGB(255, 0, 0, 0);
-const colorGrey = Color.fromARGB(255, 96, 125, 139);
-const colorWhite = Color.fromARGB(255, 255, 255, 255);
-
 class SongDisplay extends StatelessWidget {
   static const double padding = 5;
+  final TabContext ctx;
   final Song song;
 
-  const SongDisplay(this.song, {Key? key}) : super(key: key);
+  const SongDisplay(this.ctx, this.song, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +76,7 @@ class SongDisplay extends StatelessWidget {
 
   List<Widget> buildRows() {
     if (song.measures.length == 1) {
-      return [MeasureDisplay(song.measures[0], false)];
+      return [MeasureDisplay(song.measures[0], ctx: ctx, last: false)];
     }
 
     List<Widget> rows = [];
@@ -88,25 +97,34 @@ class SongDisplay extends StatelessWidget {
     return Expanded(
         child: Row(textDirection: TextDirection.ltr, children: [
       const SizedBox(width: padding),
-      Expanded(child: MeasureDisplay(measure, measure2 == null)),
+      Expanded(child: MeasureDisplay(measure, ctx: ctx, last: measure2 == null)),
       const SizedBox(width: padding),
       Expanded(
           child: measure2 == null
               ? const SizedBox()
-              : MeasureDisplay(measure2, last)),
+              : MeasureDisplay(measure2, ctx: ctx, last: last)),
       const SizedBox(width: padding),
     ]));
   }
 }
 
-class MeasureDisplay extends Container {
-  MeasureDisplay(Measure measure, bool last, {Key? key})
-      : super(
-            key: key,
-            color: colorWhite,
-            height: 200,
-            width: 550,
-            child: CustomPaint(painter: MeasurePainter(measure, last)));
+class MeasureDisplay extends StatelessWidget {
+  final TabContext ctx;
+  final Measure measure;
+  final bool last;
+
+  const MeasureDisplay(this.measure,
+      {Key? key, this.ctx = const TabContext(), this.last = false})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: ctx.backgroundColor,
+        height: 200,
+        width: 550,
+        child: CustomPaint(painter: MeasurePainter(ctx, measure, last)));
+  }
 }
 
 class MeasurePainter extends CustomPainter {
@@ -115,12 +133,13 @@ class MeasurePainter extends CustomPainter {
   static const double repeatLineOffset = repeatBarWidth + repeatBarOffset;
   static const double repeatLineWidth = 1;
   static const double repeatCircleOffset = 13;
+  final TabContext ctx;
   final Measure measure;
   final bool last;
   double xSpacing = 0;
   double ySpacing = 0;
 
-  MeasurePainter(this.measure, this.last);
+  MeasurePainter(this.ctx, this.measure, this.last);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -146,7 +165,7 @@ class MeasurePainter extends CustomPainter {
   void paintRepeatLine(
       Canvas canvas, Size size, bool end, double offset, double width) {
     var paint = Paint();
-    paint.color = colorGrey;
+    paint.color = ctx.lineColor;
     paint.style = PaintingStyle.stroke;
     paint.strokeWidth = width;
     var path = Path();
@@ -157,7 +176,7 @@ class MeasurePainter extends CustomPainter {
   }
 
   void paintRepeatDots(Canvas canvas, Size size, bool end) {
-    var paint = Paint()..color = colorGrey;
+    var paint = Paint()..color = ctx.lineColor;
     var xOffset = end ? size.width - repeatCircleOffset : repeatCircleOffset;
     var yOffset = size.height / 6;
     canvas.drawCircle(Offset(xOffset, yOffset * 1.5), 2, paint);
@@ -202,7 +221,7 @@ class MeasurePainter extends CustomPainter {
 
   void paintNote(
       Canvas canvas, Size size, Note note, double noteX, double noteY) {
-    const textStyle = TextStyle(color: colorBlack, fontSize: 24);
+    final textStyle = TextStyle(color: ctx.notationColor, fontSize: 24);
     final textSpan = TextSpan(text: note.fret.toString(), style: textStyle);
     final textPainter = TextPainter(
       text: textSpan,
@@ -220,7 +239,7 @@ class MeasurePainter extends CustomPainter {
       final paint = Paint();
       paint.style = PaintingStyle.stroke;
       paint.strokeWidth = 2;
-      paint.color = colorBlack;
+      paint.color = ctx.notationColor;
       canvas.drawCircle(Offset(noteX, noteY), 16, paint);
     }
   }
@@ -234,7 +253,7 @@ class MeasurePainter extends CustomPainter {
     final paint = Paint();
     paint.style = PaintingStyle.stroke;
     paint.strokeWidth = 2;
-    paint.color = colorBlack;
+    paint.color = ctx.notationColor;
     final path = Path();
     path.moveTo(xFrom, y);
     path.quadraticBezierTo(xControl, yControl, xTo, y);
@@ -250,7 +269,7 @@ class MeasurePainter extends CustomPainter {
     final paint = Paint();
     paint.style = PaintingStyle.stroke;
     paint.strokeWidth = 2;
-    paint.color = colorBlack;
+    paint.color = ctx.notationColor;
     final path = Path();
     path.moveTo(xFrom, y);
     path.quadraticBezierTo(xControl, yControl, xTo, y);
@@ -264,7 +283,7 @@ class MeasurePainter extends CustomPainter {
     final paint = Paint();
     paint.style = PaintingStyle.stroke;
     paint.strokeWidth = 2;
-    paint.color = colorBlack;
+    paint.color = ctx.notationColor;
     final path = Path();
     path.moveTo(xFrom, y);
     path.lineTo(xTo, y);
@@ -273,7 +292,7 @@ class MeasurePainter extends CustomPainter {
 
   void paintStrings(Canvas canvas, Size size) {
     var paint = Paint();
-    paint.color = colorGrey;
+    paint.color = ctx.lineColor;
     paint.style = PaintingStyle.stroke;
     paint.strokeWidth = 1;
 
