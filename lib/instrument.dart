@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 enum Instrument {
@@ -33,7 +34,29 @@ extension IconFn on Instrument {
   }
 }
 
+extension OtherFn on Instrument {
+  Instrument other() {
+    return this == Instrument.banjo ? Instrument.guitar : Instrument.banjo;
+  }
+}
+
 final banjoIcon =
     SvgPicture.asset("assets/banjo_nav.svg", semanticsLabel: "Banjo");
 final guitarIcon =
     SvgPicture.asset("assets/guitar_nav.svg", semanticsLabel: "Guitar");
+
+class InstrumentIcon extends StatelessWidget {
+  final Instrument instrument;
+
+  const InstrumentIcon(
+    this.instrument, {
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Hero(
+        tag: instrument.name(),
+        child: SizedBox(child: instrument.icon(), height: 50, width: 50));
+  }
+}

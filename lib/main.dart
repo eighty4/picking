@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:music_box/navbar.dart';
+import 'package:music_box/nav/navbar.dart';
 import 'package:music_box/play.dart';
 
 import 'instrument.dart';
