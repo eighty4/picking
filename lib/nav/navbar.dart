@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -5,27 +6,46 @@ import '../instrument.dart';
 import 'instrument_swap.dart';
 
 class Navbar extends StatelessWidget {
-  final Instrument instrument;
-
-  const Navbar(this.instrument, {Key? key}) : super(key: key);
+  const Navbar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    InstrumentModel.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
-      child: Row(children: [
-        ButtonSwap(
-          primary: InstrumentIcon(instrument),
-          secondary: InstrumentIcon(instrument.other()),
-          size: const Size(50, 50),
-        ),
-        const NavbarTextLink("Play"),
-        const NavbarTextLink("Write"),
-        const Spacer(),
-        const NavbarIcon(Icons.equalizer_rounded),
-        const NavbarIcon(Icons.cast_rounded),
+      child: Row(children: const [
+        InstrumentSwap(),
+        NavbarTextLink("Play"),
+        NavbarTextLink("Write"),
+        Spacer(),
+        NavbarIcon(Icons.equalizer_rounded),
+        NavbarIcon(Icons.cast_rounded),
       ]),
     );
+  }
+}
+
+class InstrumentSwap extends StatelessWidget {
+  const InstrumentSwap({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final instrument = InstrumentModel.of(context);
+    final other = instrument.other();
+    if (kDebugMode) {
+      print('InstrumentSwap.build instrument=$instrument other=$other');
+    }
+    return ButtonSwap(
+      buttons: {
+        InstrumentIcon(instrument): () => onInstrumentSwap(context, other),
+        InstrumentIcon(other): () => onInstrumentSwap(context, instrument),
+      },
+      // size: const Size(50, 50),
+    );
+  }
+
+  void onInstrumentSwap(BuildContext context, Instrument instrument) {
+    Navigator.pushNamed(context, instrument.path());
   }
 }
 

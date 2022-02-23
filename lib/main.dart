@@ -57,36 +57,51 @@ class MusicBoxApp extends StatelessWidget {
   }
 }
 
-class AppScreen extends StatelessWidget {
+class AppScreen extends StatefulWidget {
   final Instrument instrument;
 
   const AppScreen(this.instrument, {Key? key}) : super(key: key);
 
   @override
+  State<AppScreen> createState() => _AppScreenState();
+}
+
+class _AppScreenState extends State<AppScreen> {
+  late Instrument instrument;
+
+  @override
+  void initState() {
+    super.initState();
+    instrument = widget.instrument;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Column(
-      children: [
-        Navbar(instrument),
-        Flexible(
-          child: SizedBox(
-            width: double.infinity,
-            child: Center(
-              child: Navigator(
-                initialRoute: "paddle faster, i hear banjos",
-                onGenerateRoute: (settings) {
-                  return MaterialPageRoute<dynamic>(
-                    builder: (context) {
-                      return PlayScreen(instrument);
+    return InstrumentModel(
+        instrument: instrument,
+        child: Scaffold(
+            body: Column(
+          children: [
+            const Navbar(),
+            Flexible(
+              child: SizedBox(
+                width: double.infinity,
+                child: Center(
+                  child: Navigator(
+                    initialRoute: "paddle faster, i hear banjos",
+                    onGenerateRoute: (settings) {
+                      return MaterialPageRoute<dynamic>(
+                        builder: (context) {
+                          return const PlayScreen();
+                        },
+                        settings: settings,
+                      );
                     },
-                    settings: settings,
-                  );
-                },
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ],
-    ));
+          ],
+        )));
   }
 }

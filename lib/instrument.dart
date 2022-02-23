@@ -60,3 +60,23 @@ class InstrumentIcon extends StatelessWidget {
         child: SizedBox(child: instrument.icon(), height: 50, width: 50));
   }
 }
+
+class InstrumentModel extends InheritedWidget {
+  final Instrument instrument;
+
+  const InstrumentModel(
+      {Key? key, required Widget child, required this.instrument})
+      : super(key: key, child: child);
+
+  static Instrument of(BuildContext context) {
+    final result = context.dependOnInheritedWidgetOfExactType<InstrumentModel>();
+    assert(result != null, "No InstrumentModel found in context");
+    return result!.instrument;
+  }
+
+  @override
+  bool updateShouldNotify(InstrumentModel oldWidget) {
+    print("InstrumentModel update from ${oldWidget.instrument} to $instrument");
+    return true;
+  }
+}
