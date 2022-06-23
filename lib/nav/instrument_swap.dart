@@ -27,7 +27,7 @@ class ButtonSwapState extends State<ButtonSwap> {
 
   Widget _createButton() {
     final button = buttons.elementAt(current);
-    return GestureDetector(child: button.key, onTap: _onTap);
+    return GestureDetector(onTap: _onTap, child: button.key);
   }
 
   void _onTap() {

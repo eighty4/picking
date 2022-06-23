@@ -69,7 +69,8 @@ class InstrumentModel extends InheritedWidget {
       : super(key: key, child: child);
 
   static Instrument of(BuildContext context) {
-    final result = context.dependOnInheritedWidgetOfExactType<InstrumentModel>();
+    final result =
+        context.dependOnInheritedWidgetOfExactType<InstrumentModel>();
     assert(result != null, "No InstrumentModel found in context");
     return result!.instrument;
   }

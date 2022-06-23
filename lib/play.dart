@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'instrument.dart';
@@ -9,7 +10,7 @@ class PlayScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final instrument = InstrumentModel.of(context);
-    print('$instrument tabs');
+    if (kDebugMode) print('$instrument tabs');
     return Container(
         padding: const EdgeInsets.all(150),
         child: MeasureDisplay(

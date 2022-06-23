@@ -97,7 +97,8 @@ class SongDisplay extends StatelessWidget {
     return Expanded(
         child: Row(textDirection: TextDirection.ltr, children: [
       const SizedBox(width: padding),
-      Expanded(child: MeasureDisplay(measure, ctx: ctx, last: measure2 == null)),
+      Expanded(
+          child: MeasureDisplay(measure, ctx: ctx, last: measure2 == null)),
       const SizedBox(width: padding),
       Expanded(
           child: measure2 == null
