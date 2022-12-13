@@ -1,52 +1,24 @@
 library libtab;
 
 import 'package:flutter/widgets.dart';
+import 'package:music_box/libtab/measure.dart';
+import 'package:music_box/libtab/note.dart';
+
+export 'package:music_box/libtab/measure.dart';
+export 'package:music_box/libtab/note.dart';
 
 class TabContext {
+  final bool drawBorder;
   final Color backgroundColor;
   final Color lineColor;
   final Color notationColor;
 
   const TabContext({
+    this.drawBorder = true,
     this.backgroundColor = const Color.fromARGB(255, 255, 255, 255),
     this.lineColor = const Color.fromARGB(255, 96, 125, 139),
     this.notationColor = const Color.fromARGB(255, 0, 0, 0),
   });
-}
-
-enum Chord { a, c, d, d7, f, g }
-
-enum Finger { t, m, i }
-
-class Note {
-  final int string;
-  final int fret;
-  final bool melody;
-  final Chord? chord;
-  final int? hammerOn;
-  final int? pullOff;
-  final int? slideTo;
-  final Finger? pick;
-  final Note? and;
-
-  Note(this.string, this.fret,
-      {this.melody = false,
-      this.chord,
-      this.hammerOn,
-      this.pullOff,
-      this.slideTo,
-      this.pick,
-      this.and});
-}
-
-class Measure {
-  final Chord? chord;
-  final List<Note?> notes;
-  final bool repeatStart;
-  final bool repeatEnd;
-
-  Measure(this.notes,
-      {this.repeatStart = false, this.repeatEnd = false, this.chord});
 }
 
 class Song {
@@ -303,6 +275,15 @@ class MeasurePainter extends CustomPainter {
       path.moveTo(0, y);
       path.lineTo(size.width, y);
     }
+
+    if (ctx.drawBorder) {
+      path.moveTo(0, 0);
+      path.lineTo(0, size.height);
+      path.lineTo(size.width, size.height);
+      path.lineTo(size.width, 0);
+      path.lineTo(0, 0);
+    }
+
     canvas.drawPath(path, paint);
   }
 

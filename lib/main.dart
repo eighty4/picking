@@ -80,6 +80,7 @@ class _AppScreenState extends State<AppScreen> {
     return InstrumentModel(
         instrument: instrument,
         child: Scaffold(
+          backgroundColor: Colors.white,
             body: Column(
           children: [
             const Navbar(),
