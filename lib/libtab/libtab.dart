@@ -1,11 +1,14 @@
 library libtab;
 
 import 'package:flutter/widgets.dart';
-import 'package:music_box/libtab/measure.dart';
-import 'package:music_box/libtab/note.dart';
 
-export 'package:music_box/libtab/measure.dart';
-export 'package:music_box/libtab/note.dart';
+import 'instrument.dart';
+import 'measure.dart';
+import 'note.dart';
+
+export 'instrument.dart';
+export 'measure.dart';
+export 'note.dart';
 
 class TabContext {
   final bool drawBorder;
@@ -48,7 +51,10 @@ class SongDisplay extends StatelessWidget {
 
   List<Widget> buildRows() {
     if (song.measures.length == 1) {
-      return [MeasureDisplay(song.measures[0], ctx: ctx, last: false)];
+      return [
+        MeasureDisplay(song.measures[0],
+            ctx: ctx, instrument: Instrument.guitar, last: false)
+      ];
     }
 
     List<Widget> rows = [];
@@ -70,12 +76,14 @@ class SongDisplay extends StatelessWidget {
         child: Row(textDirection: TextDirection.ltr, children: [
       const SizedBox(width: padding),
       Expanded(
-          child: MeasureDisplay(measure, ctx: ctx, last: measure2 == null)),
+          child: MeasureDisplay(measure,
+              ctx: ctx, instrument: Instrument.guitar, last: measure2 == null)),
       const SizedBox(width: padding),
       Expanded(
           child: measure2 == null
               ? const SizedBox()
-              : MeasureDisplay(measure2, ctx: ctx, last: last)),
+              : MeasureDisplay(measure2,
+                  ctx: ctx, instrument: Instrument.guitar, last: last)),
       const SizedBox(width: padding),
     ]));
   }
@@ -83,11 +91,15 @@ class SongDisplay extends StatelessWidget {
 
 class MeasureDisplay extends StatelessWidget {
   final TabContext ctx;
-  final Measure measure;
+  final Instrument instrument;
   final bool last;
+  final Measure measure;
 
   const MeasureDisplay(this.measure,
-      {Key? key, this.ctx = const TabContext(), this.last = false})
+      {Key? key,
+      this.ctx = const TabContext(),
+      required this.instrument,
+      this.last = false})
       : super(key: key);
 
   @override
@@ -96,7 +108,8 @@ class MeasureDisplay extends StatelessWidget {
         color: ctx.backgroundColor,
         height: 200,
         width: 550,
-        child: CustomPaint(painter: MeasurePainter(ctx, measure, last)));
+        child: CustomPaint(
+            painter: MeasurePainter(ctx, instrument, measure, last)));
   }
 }
 
@@ -107,16 +120,17 @@ class MeasurePainter extends CustomPainter {
   static const double repeatLineWidth = 1;
   static const double repeatCircleOffset = 13;
   final TabContext ctx;
+  final Instrument instrument;
   final Measure measure;
   final bool last;
   double xSpacing = 0;
   double ySpacing = 0;
 
-  MeasurePainter(this.ctx, this.measure, this.last);
+  MeasurePainter(this.ctx, this.instrument, this.measure, this.last);
 
   @override
   void paint(Canvas canvas, Size size) {
-    ySpacing = size.height / 6;
+    ySpacing = size.height / instrument.stringCount();
     xSpacing = size.width / 9;
     paintStrings(canvas, size);
     paintNotes(canvas, size);

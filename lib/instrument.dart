@@ -1,25 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import "package:music_box/libtab/instrument.dart";
 
-enum Instrument {
-  banjo,
-  guitar,
-}
-
-extension NameFn on Instrument {
-  String name() {
-    switch (this) {
-      case Instrument.banjo:
-        return "banjo";
-      case Instrument.guitar:
-        return "guitar";
-    }
-  }
-}
+export "package:music_box/libtab/instrument.dart";
 
 extension PathFn on Instrument {
   String path() {
-    return '/' + name();
+    return '/${name()}';
   }
 }
 

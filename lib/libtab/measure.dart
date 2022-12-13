@@ -1,4 +1,4 @@
-import 'package:music_box/libtab/note.dart';
+import 'note.dart';
 
 class Measure {
   final Chord? chord;
