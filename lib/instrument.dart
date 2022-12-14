@@ -1,8 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import "package:music_box/libtab/instrument.dart";
+import "package:picking/libtab/instrument.dart";
 
-export "package:music_box/libtab/instrument.dart";
+export "package:picking/libtab/instrument.dart";
 
 extension PathFn on Instrument {
   String path() {
@@ -44,7 +45,7 @@ class InstrumentIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Hero(
         tag: instrument.name(),
-        child: SizedBox(child: instrument.icon(), height: 50, width: 50));
+        child: SizedBox(height: 50, width: 50, child: instrument.icon()));
   }
 }
 
@@ -64,7 +65,10 @@ class InstrumentModel extends InheritedWidget {
 
   @override
   bool updateShouldNotify(InstrumentModel oldWidget) {
-    print("InstrumentModel update from ${oldWidget.instrument} to $instrument");
+    if (kDebugMode) {
+      print(
+          "InstrumentModel update from ${oldWidget.instrument} to $instrument");
+    }
     return true;
   }
 }

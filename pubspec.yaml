@@ -1,5 +1,5 @@
-name: music_box
-description: Banjo and Guitar app
+name: picking
+description: Banjo and Guitar picking app for beginners
 publish_to: 'none'
 version: 1.0.0+1
 

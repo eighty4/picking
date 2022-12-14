@@ -18,6 +18,19 @@ class StartScreenState extends State<StartScreen> {
   }
 }
 
+class SelectInstrumentScreen extends StatelessWidget {
+  const SelectInstrumentScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Stack(children: const [
+          SelectInstrumentPic(Instrument.banjo, 0.225),
+          SelectInstrumentPic(Instrument.guitar, 0.775),
+        ]));
+  }
+}
+
 class SelectInstrumentPic extends StatelessWidget {
   final Instrument instrument;
   final double xOffset;
@@ -41,18 +54,5 @@ class SelectInstrumentPic extends StatelessWidget {
                 Navigator.pushNamed(context, instrument.path());
               })),
     );
-  }
-}
-
-class SelectInstrumentScreen extends StatelessWidget {
-  const SelectInstrumentScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        body: Stack(children: const [
-      SelectInstrumentPic(Instrument.banjo, 0.225),
-      SelectInstrumentPic(Instrument.guitar, 0.775),
-    ]));
   }
 }

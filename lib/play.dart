@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:music_box/libtab/libtab.dart';
+import 'package:picking/libtab/libtab.dart';
 
 import 'instrument.dart';
 

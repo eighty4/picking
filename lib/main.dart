@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:music_box/nav/navbar.dart';
-import 'package:music_box/play.dart';
+import 'package:picking/nav/navbar.dart';
+import 'package:picking/play.dart';
 
 import 'instrument.dart';
 import 'start.dart';
 
 void main() {
-  runApp(const MusicBoxApp());
+  runApp(const PickingApp());
 }
 
-class MusicBoxRoutes {
+class PickingAppRoutes {
   static const String home = "/";
 
   static Instrument? instrumentFromRoute(String route) {
@@ -23,21 +23,20 @@ class MusicBoxRoutes {
   }
 }
 
-class MusicBoxApp extends StatelessWidget {
-  const MusicBoxApp({Key? key}) : super(key: key);
+class PickingApp extends StatelessWidget {
+  const PickingApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Banjo Buddy',
       initialRoute: '/',
       onGenerateRoute: (settings) {
         Widget? page;
         String route = settings.name!;
-        if (route == MusicBoxRoutes.home) {
+        if (route == PickingAppRoutes.home) {
           page = const StartScreen();
         }
-        Instrument? instrument = MusicBoxRoutes.instrumentFromRoute(route);
+        Instrument? instrument = PickingAppRoutes.instrumentFromRoute(route);
         if (instrument != null) {
           page = AppScreen(instrument);
         }

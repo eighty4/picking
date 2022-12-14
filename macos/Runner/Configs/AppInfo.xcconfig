@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = music_box
+PRODUCT_NAME = Picking
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = io.eighty4.musicBox
+PRODUCT_BUNDLE_IDENTIFIER = eighty4.picking
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2022 io.eighty4. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2022 eighty4. All rights reserved.
