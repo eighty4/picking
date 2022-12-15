@@ -35,17 +35,20 @@ final guitarIcon =
 
 class InstrumentIcon extends StatelessWidget {
   final Instrument instrument;
+  final Size size;
 
   const InstrumentIcon(
     this.instrument, {
     Key? key,
+    this.size = const Size(50, 50),
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Hero(
         tag: instrument.name(),
-        child: SizedBox(height: 50, width: 50, child: instrument.icon()));
+        child: SizedBox(
+            height: size.height, width: size.width, child: instrument.icon()));
   }
 }
 

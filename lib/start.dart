@@ -2,16 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'instrument.dart';
 
-class StartScreen extends StatefulWidget {
+class StartScreen extends StatelessWidget {
   const StartScreen({Key? key}) : super(key: key);
 
-  @override
-  State<StatefulWidget> createState() {
-    return StartScreenState();
-  }
-}
-
-class StartScreenState extends State<StartScreen> {
   @override
   Widget build(BuildContext context) {
     return const SelectInstrumentScreen();
@@ -25,9 +18,9 @@ class SelectInstrumentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Stack(children: const [
-          SelectInstrumentPic(Instrument.banjo, 0.225),
-          SelectInstrumentPic(Instrument.guitar, 0.775),
-        ]));
+      SelectInstrumentPic(Instrument.banjo, 0.225),
+      SelectInstrumentPic(Instrument.guitar, 0.775),
+    ]));
   }
 }
 
@@ -42,17 +35,11 @@ class SelectInstrumentPic extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       alignment: FractionalOffset(xOffset, 0.4),
-      child: Hero(
-          tag: instrument.name(),
-          child: GestureDetector(
-              child: Container(
-                  height: 250,
-                  width: 250,
-                  color: Colors.transparent,
-                  child: instrument.icon()),
-              onTap: () {
-                Navigator.pushNamed(context, instrument.path());
-              })),
+      child: GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, instrument.path());
+          },
+          child: InstrumentIcon(instrument, size: const Size(250, 250))),
     );
   }
 }
