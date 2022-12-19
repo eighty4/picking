@@ -6,6 +6,9 @@ class Measure {
   final bool repeatStart;
   final bool repeatEnd;
 
-  Measure(this.notes,
-      {this.repeatStart = false, this.repeatEnd = false, this.chord});
+  Measure(
+      {required this.notes,
+      this.repeatStart = false,
+      this.repeatEnd = false,
+      this.chord});
 }

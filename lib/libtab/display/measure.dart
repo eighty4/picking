@@ -46,14 +46,12 @@ class MeasurePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    stringSpacing = size.height / instrument.stringCount();
+    stringSpacing = size.height / (instrument.stringCount() - 1);
     eighthSpacing = size.width / 9;
 
-    if (ctx.drawBorder) {
-      canvas.drawRect(
-          Rect.fromPoints(const Offset(0, 0), Offset(size.width, size.height)),
-          linePaint);
-    }
+    canvas.drawRect(
+        Rect.fromPoints(const Offset(0, 0), Offset(size.width, size.height)),
+        linePaint);
     paintStrings(canvas, size);
     paintNotes(canvas, size);
 
@@ -83,7 +81,7 @@ class MeasurePainter extends CustomPainter {
   void paintRepeatDots(Canvas canvas, Size size, bool end) {
     var paint = ctx.linePaint(style: PaintingStyle.fill);
     var xOffset = end ? size.width - repeatCircleOffset : repeatCircleOffset;
-    var yOffset = size.height / 6;
+    var yOffset = size.height / instrument.stringCount();
     canvas.drawCircle(Offset(xOffset, yOffset * 1.5), 2, paint);
     canvas.drawCircle(Offset(xOffset, yOffset * 4.5), 2, paint);
   }
@@ -94,7 +92,7 @@ class MeasurePainter extends CustomPainter {
         return;
       }
       final noteX = (i + 1) * eighthSpacing;
-      final noteY = stringSpacing * note.string;
+      final noteY = stringSpacing * (note.string - 1);
       paintNote(canvas, size, note, noteX, noteY);
 
       if (note.slideTo != null) {
@@ -117,7 +115,7 @@ class MeasurePainter extends CustomPainter {
 
       if (note.and != null) {
         for (var and = note.and; and != null;) {
-          paintNote(canvas, size, and, noteX, and.string * stringSpacing);
+          paintNote(canvas, size, and, noteX, (and.string - 1) * stringSpacing);
           and = and.and;
         }
       }
@@ -181,7 +179,7 @@ class MeasurePainter extends CustomPainter {
 
   void paintStrings(Canvas canvas, Size size) {
     var path = Path();
-    for (var i = 1; i < 6; i++) {
+    for (var i = 1; i < instrument.stringCount(); i++) {
       var y = stringSpacing * i;
       path.moveTo(0, y);
       path.lineTo(size.width, y);

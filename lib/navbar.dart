@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:picking/routes.dart';
 
 import 'instrument.dart';
 
@@ -10,16 +9,13 @@ class Navbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final instrument = InstrumentModel.of(context);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 35),
-      child: Row(children: [
-        const InstrumentSwap(),
-        NavbarTextLink("Tabs", PickingAppRoutes.tabs(instrument)),
-        NavbarTextLink("Chord Chart", PickingAppRoutes.chords(instrument)),
-        const Spacer(),
-        const NavbarIcon(Icons.equalizer_rounded),
-        const NavbarIcon(Icons.cast_rounded),
+      child: Row(children: const [
+        InstrumentSwap(),
+        Spacer(),
+        NavbarIcon(Icons.equalizer_rounded),
+        NavbarIcon(Icons.cast_rounded),
       ]),
     );
   }
@@ -54,37 +50,28 @@ class NavbarTextLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? currentRoute = ModalRoute.of(context)?.settings.name;
-    final bool isLinkForCurrentRoute = route == currentRoute ||
-        (text == 'Tabs' &&
-            currentRoute != null &&
-            PickingAppRoutes.playModeFromRoute(currentRoute) == null);
     return Container(
         padding: const EdgeInsets.only(left: 35),
         child: GestureDetector(
           onTap: () {
-            if (!isLinkForCurrentRoute) {
-              Navigator.of(context).pushNamed(route);
+            if (kDebugMode) {
+              print('pushing route $route');
             }
+            Navigator.of(context).pushNamed(route);
           },
           child: MouseRegion(
-            cursor: isLinkForCurrentRoute
-                ? SystemMouseCursors.basic
-                : SystemMouseCursors.click,
+            cursor: SystemMouseCursors.click,
             child: Text(text,
                 style: GoogleFonts.quicksand(
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                         color: Colors.transparent,
-                        shadows: const [
+                        shadows: [
                           Shadow(
                               color: Color.fromARGB(255, 30, 32, 41),
                               offset: Offset(0, -2))
                         ],
-                        decoration: isLinkForCurrentRoute
-                            ? TextDecoration.underline
-                            : TextDecoration.none,
-                        decorationColor:
-                            const Color.fromARGB(255, 176, 225, 255),
+                        decoration: TextDecoration.underline,
+                        decorationColor: Color.fromARGB(255, 176, 225, 255),
                         decorationThickness: 3,
                         fontSize: 26,
                         fontWeight: FontWeight.bold))),
