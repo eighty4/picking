@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:picking/libtab/libtab.dart';
 
 class PracticeScreen extends StatelessWidget {
-  static WidgetBuilder createBuilder(PracticeMeasure practice) {
-    return (context) => PracticeScreen(practice: practice);
-  }
-
   final PracticeMeasure practice;
+  final TabContext tabContext;
 
-  const PracticeScreen({Key? key, required this.practice}) : super(key: key);
+  const PracticeScreen(
+      {Key? key, required this.practice, required this.tabContext})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-    Padding(
-      padding: const EdgeInsets.only(bottom: 20),
-      child: Text(practice.label,
-          style:
-              const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-    ),
-    MeasureDisplay(practice.measure, instrument: practice.instrument)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 35),
+          child: Text(practice.label,
+              style:
+                  const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+        ),
+        MeasureDisplay(practice.measure,
+            tabContext: tabContext, instrument: practice.instrument)
       ],
     );
   }

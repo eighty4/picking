@@ -1,15 +1,15 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 class TabContext {
   final Color backgroundColor;
   final Color lineColor;
   final Color notationColor;
 
-  const TabContext({
-    this.backgroundColor = const Color.fromARGB(255, 255, 255, 255),
-    this.lineColor = const Color.fromARGB(255, 96, 125, 139),
-    this.notationColor = const Color.fromARGB(255, 0, 0, 0),
-  });
+  TabContext.forBrightness(Brightness brightness)
+      : backgroundColor = Colors.transparent,
+        lineColor = Colors.blueGrey,
+        notationColor =
+            brightness == Brightness.dark ? Colors.white : Colors.black;
 
   Paint linePaint(
       {double width = 1, PaintingStyle style = PaintingStyle.stroke}) {

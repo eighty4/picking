@@ -4,9 +4,10 @@ import 'dev.dart';
 import 'instrument.dart';
 import 'routes.dart';
 import 'start.dart';
+import 'tv.dart';
 
 void main() {
-  runApp(const PickingApp());
+  runApp(const TvApp());
 }
 
 class PickingApp extends StatelessWidget {

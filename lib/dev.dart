@@ -96,14 +96,14 @@ class ChordsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final instrument = InstrumentModel.of(context);
-    if (kDebugMode) {
-      print('$instrument ${ModalRoute.of(context)?.settings.name}');
-    }
+    final tabContext =
+        TabContext.forBrightness(MediaQuery.of(context).platformBrightness);
     switch (instrument) {
       case Instrument.banjo:
-        return ChordChartDisplay(chord: BanjoChords.c);
+        return ChordChartDisplay(tabContext: tabContext, chord: BanjoChords.c);
       case Instrument.guitar:
-        return ChordChartDisplay(chord: GuitarChords.am);
+        return ChordChartDisplay(
+            tabContext: tabContext, chord: GuitarChords.am);
     }
   }
 }
@@ -114,9 +114,8 @@ class TabsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final instrument = InstrumentModel.of(context);
-    if (kDebugMode) {
-      print('$instrument ${ModalRoute.of(context)?.settings.name}');
-    }
+    final tabContext =
+        TabContext.forBrightness(MediaQuery.of(context).platformBrightness);
     return Padding(
       padding: const EdgeInsets.all(150),
       child: MeasureDisplay(
@@ -130,6 +129,7 @@ class TabsScreen extends StatelessWidget {
             Note(1, 14, and: Note(2, 14))
           ]),
           instrument: instrument,
+          tabContext: tabContext,
           last: true),
     );
   }
@@ -140,6 +140,8 @@ class TimerScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tabContext =
+        TabContext.forBrightness(MediaQuery.of(context).platformBrightness);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 50),
       child: TimerFlow(
@@ -150,10 +152,14 @@ class TimerScreen extends StatelessWidget {
           },
           screenDuration: const Duration(seconds: 3),
           screens: [
-            PracticeScreen.createBuilder(BanjoRolls.forward),
-            PracticeScreen.createBuilder(BanjoRolls.backward),
-            PracticeScreen.createBuilder(BanjoRolls.forwardBackward),
-            PracticeScreen.createBuilder(BanjoRolls.alternatingThumb),
+            (context) => PracticeScreen(
+                tabContext: tabContext, practice: BanjoRolls.forward),
+            (context) => PracticeScreen(
+                tabContext: tabContext, practice: BanjoRolls.backward),
+            (context) => PracticeScreen(
+                tabContext: tabContext, practice: BanjoRolls.forwardBackward),
+            (context) => PracticeScreen(
+                tabContext: tabContext, practice: BanjoRolls.alternatingThumb),
           ]),
     );
   }

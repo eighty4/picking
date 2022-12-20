@@ -2,14 +2,14 @@ import 'package:flutter/widgets.dart';
 import 'package:picking/libtab/libtab.dart';
 
 class MeasureDisplay extends StatelessWidget {
-  final TabContext ctx;
+  final TabContext tabContext;
   final Instrument instrument;
   final bool last;
   final Measure measure;
 
   const MeasureDisplay(this.measure,
       {Key? key,
-      this.ctx = const TabContext(),
+      required this.tabContext,
       required this.instrument,
       this.last = false})
       : super(key: key);
@@ -17,11 +17,11 @@ class MeasureDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: ctx.backgroundColor,
+        color: tabContext.backgroundColor,
         child: CustomPaint(
             willChange: false,
             size: const Size(550, 200),
-            painter: MeasurePainter(ctx, instrument, measure, last)));
+            painter: MeasurePainter(tabContext, instrument, measure, last)));
   }
 }
 
@@ -31,7 +31,7 @@ class MeasurePainter extends CustomPainter {
   static const double repeatLineOffset = repeatBarWidth + repeatBarOffset;
   static const double repeatLineWidth = 1;
   static const double repeatCircleOffset = 13;
-  final TabContext ctx;
+  final TabContext tabContext;
   final Instrument instrument;
   final Measure measure;
   final bool last;
@@ -40,9 +40,9 @@ class MeasurePainter extends CustomPainter {
   double eighthSpacing = 0;
   double stringSpacing = 0;
 
-  MeasurePainter(this.ctx, this.instrument, this.measure, this.last)
-      : linePaint = ctx.linePaint(),
-        notationPaint = ctx.notationPaint();
+  MeasurePainter(this.tabContext, this.instrument, this.measure, this.last)
+      : linePaint = tabContext.linePaint(),
+        notationPaint = tabContext.notationPaint();
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -75,11 +75,11 @@ class MeasurePainter extends CustomPainter {
     double lineOffset = end ? size.width - offset : offset;
     path.moveTo(lineOffset, 0);
     path.lineTo(lineOffset, size.height);
-    canvas.drawPath(path, ctx.linePaint(width: width));
+    canvas.drawPath(path, tabContext.linePaint(width: width));
   }
 
   void paintRepeatDots(Canvas canvas, Size size, bool end) {
-    var paint = ctx.linePaint(style: PaintingStyle.fill);
+    var paint = tabContext.linePaint(style: PaintingStyle.fill);
     var xOffset = end ? size.width - repeatCircleOffset : repeatCircleOffset;
     var yOffset = size.height / instrument.stringCount();
     canvas.drawCircle(Offset(xOffset, yOffset * 1.5), 2, paint);
@@ -124,7 +124,7 @@ class MeasurePainter extends CustomPainter {
 
   void paintNote(
       Canvas canvas, Size size, Note note, double noteX, double noteY) {
-    final textStyle = TextStyle(color: ctx.notationColor, fontSize: 24);
+    final textStyle = TextStyle(color: tabContext.notationColor, fontSize: 24);
     final textSpan = TextSpan(text: note.fret.toString(), style: textStyle);
     final textPainter = TextPainter(
       text: textSpan,

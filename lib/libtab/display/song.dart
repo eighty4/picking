@@ -11,10 +11,10 @@ class Song {
 
 class SongDisplay extends StatelessWidget {
   static const double padding = 5;
-  final TabContext ctx;
+  final TabContext tabContext;
   final Song song;
 
-  const SongDisplay(this.ctx, this.song, {Key? key}) : super(key: key);
+  const SongDisplay(this.tabContext, this.song, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class SongDisplay extends StatelessWidget {
     if (song.measures.length == 1) {
       return [
         MeasureDisplay(song.measures[0],
-            ctx: ctx, instrument: Instrument.guitar, last: false)
+            tabContext: tabContext, instrument: Instrument.guitar, last: false)
       ];
     }
 
@@ -54,13 +54,17 @@ class SongDisplay extends StatelessWidget {
       const SizedBox(width: padding),
       Expanded(
           child: MeasureDisplay(measure,
-              ctx: ctx, instrument: Instrument.guitar, last: measure2 == null)),
+              tabContext: tabContext,
+              instrument: Instrument.guitar,
+              last: measure2 == null)),
       const SizedBox(width: padding),
       Expanded(
           child: measure2 == null
               ? const SizedBox()
               : MeasureDisplay(measure2,
-                  ctx: ctx, instrument: Instrument.guitar, last: last)),
+                  tabContext: tabContext,
+                  instrument: Instrument.guitar,
+                  last: last)),
       const SizedBox(width: padding),
     ]));
   }
