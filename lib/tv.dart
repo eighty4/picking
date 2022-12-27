@@ -35,8 +35,20 @@ class TvApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: ThemeData.dark(useMaterial3: true),
-        home: const Scaffold(body: UI()));
+        theme: ThemeData.light(useMaterial3: true),
+        darkTheme: ThemeData.dark(useMaterial3: true),
+        home: const ScreenWidget(child: UI()));
+  }
+}
+
+class ScreenWidget extends StatelessWidget {
+  final Widget child;
+
+  const ScreenWidget({Key? key, required this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(body: SafeArea(child: child));
   }
 }
 
