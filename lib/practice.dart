@@ -38,7 +38,7 @@ class BanjoRolls {
   static final PracticeMeasure forward = PracticeMeasure(
       Instrument.banjo,
       "Forward Roll",
-      Measure(notes: [
+      Measure.fromNoteList([
         Note(2, 0),
         Note(1, 0),
         Note(5, 0),
@@ -46,13 +46,13 @@ class BanjoRolls {
         Note(1, 0),
         Note(5, 0),
         Note(2, 0),
-        Note(1, 0)
+        Note(1, 0),
       ]));
 
   static final PracticeMeasure backward = PracticeMeasure(
       Instrument.banjo,
       'Backward Roll',
-      Measure(notes: [
+      Measure.fromNoteList([
         Note(1, 0),
         Note(2, 0),
         Note(5, 0),
@@ -66,7 +66,7 @@ class BanjoRolls {
   static final PracticeMeasure forwardBackward = PracticeMeasure(
       Instrument.banjo,
       'Forward Backward Roll',
-      Measure(notes: [
+      Measure.fromNoteList([
         Note(3, 0),
         Note(2, 0),
         Note(1, 0),
@@ -80,7 +80,7 @@ class BanjoRolls {
   static final PracticeMeasure alternatingThumb = PracticeMeasure(
       Instrument.banjo,
       'Alternating Thumb Roll',
-      Measure(notes: [
+      Measure.fromNoteList([
         Note(3, 0),
         Note(2, 0),
         Note(5, 0),
@@ -88,6 +88,48 @@ class BanjoRolls {
         Note(4, 0),
         Note(2, 0),
         Note(5, 0),
+        Note(1, 0),
+      ]));
+
+  static final PracticeMeasure hammerOn = PracticeMeasure(
+      Instrument.banjo,
+      'Hammer-on',
+      Measure.fromNoteList([
+        Note(3, 2, hammerOn: 3),
+        null,
+        Note(1, 0),
+        Note(4, 0, hammerOn: 2, length: const Timing(NoteType.eighth, 2)),
+        null,
+        null,
+        null,
+        Note(1, 0),
+      ]));
+
+  static final PracticeMeasure pullOff = PracticeMeasure(
+      Instrument.banjo,
+      'Pull-off',
+      Measure.fromNoteList([
+        Note(3, 3, pullOff: 2),
+        null,
+        Note(1, 0),
+        Note(4, 2, pullOff: 0, length: const Timing(NoteType.eighth, 2)),
+        null,
+        null,
+        null,
+        Note(1, 0),
+      ]));
+
+  static final PracticeMeasure slideTo = PracticeMeasure(
+      Instrument.banjo,
+      'Slide',
+      Measure.fromNoteList([
+        Note(3, 2, slideTo: 4),
+        null,
+        Note(2, 0),
+        Note(1, 0),
+        Note(4, 0, slideTo: 2, length: const Timing(NoteType.eighth, 2)),
+        null,
+        null,
         Note(1, 0),
       ]));
 }

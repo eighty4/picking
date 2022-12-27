@@ -119,7 +119,7 @@ class TabsScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(150),
       child: MeasureDisplay(
-          Measure(notes: [
+          Measure.fromNoteList([
             Note(1, 12),
             null,
             Note(3, 11),
