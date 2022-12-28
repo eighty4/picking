@@ -2,25 +2,23 @@ import 'package:flutter/material.dart';
 
 class TabContext {
   final Color backgroundColor;
-  final Color lineColor;
+  final Color chartColor;
   final Color notationColor;
 
   TabContext.forBrightness(Brightness brightness)
       : backgroundColor = Colors.transparent,
-        lineColor = Colors.blueGrey,
+        chartColor = Colors.blueGrey,
         notationColor =
             brightness == Brightness.dark ? Colors.white : Colors.black;
 
-  Paint linePaint(
-      {double width = 1, PaintingStyle style = PaintingStyle.stroke}) {
+  Paint chartPaint(PaintingStyle style, {double width = 1}) {
     return Paint()
       ..strokeWidth = width
       ..style = style
-      ..color = lineColor;
+      ..color = chartColor;
   }
 
-  Paint notationPaint(
-      {double width = 2, PaintingStyle style = PaintingStyle.stroke}) {
+  Paint notationPaint(PaintingStyle style, {double width = 2}) {
     return Paint()
       ..strokeWidth = width
       ..style = style

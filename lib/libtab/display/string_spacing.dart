@@ -2,29 +2,33 @@ import 'package:flutter/widgets.dart';
 import 'package:picking/libtab/libtab.dart';
 
 class StringSpacing {
+  final Instrument instrument;
   final double value;
 
-  StringSpacing(this.value);
+  StringSpacing(this.instrument, this.value);
 
   factory StringSpacing.fromPaintSize(Instrument instrument, Size size) {
-    return StringSpacing(size.height  / (instrument.stringCount() - 1));
+    return StringSpacing(instrument, calcValue(instrument, size));
   }
 
-  position(int string) {
+  static double calcValue(Instrument instrument, Size size) {
+    return size.height / (instrument.stringCount() - 1);
+  }
+
+  double position(int string) {
     assert(string > 0);
     return value * (string - 1);
   }
 
-  sustainNotationPositionAbove(int string) {
+  double sustainNotationPositionAbove(int string) {
     return position(string) - proportion(.3);
   }
 
-  sustainNotationPositionBelow(int string) {
+  double sustainNotationPositionBelow(int string) {
     return position(string) + proportion(.3);
   }
 
-  proportion(double proportion) {
-    assert(proportion >= -1 && proportion <= 1);
+  double proportion(double proportion) {
     return value * proportion;
   }
 }

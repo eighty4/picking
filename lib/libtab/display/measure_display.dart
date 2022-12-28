@@ -17,78 +17,140 @@ class MeasureDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final stringSpacing = StringSpacing.fromPaintSize(instrument, size);
     return Container(
         color: tabContext.backgroundColor,
-        child: CustomPaint(
-            willChange: false,
-            size: size,
-            painter: MeasurePainter(tabContext, instrument, measure, last,
-                noteSpacing: NoteSpacing.fromPaintSize(size),
-                stringSpacing: StringSpacing.fromPaintSize(instrument, size))));
+        child: MultiPainter(size: size, painters: [
+          MeasureChartPainter(
+              tabContext: tabContext,
+              instrument: instrument,
+              measure: measure,
+              last: last,
+              stringSpacing: stringSpacing),
+          MeasureNotePainter(
+              tabContext: tabContext,
+              measure: measure,
+              noteSpacing: NoteSpacing.fromPaintSize(size),
+              stringSpacing: StringSpacing.fromPaintSize(instrument, size)),
+        ]));
   }
 }
 
-class MeasurePainter extends CustomPainter {
-  static const double repeatBarWidth = 6;
-  static const double repeatBarOffset = repeatBarWidth / 2;
-  static const double repeatLineOffset = repeatBarWidth + repeatBarOffset;
-  static const double repeatLineWidth = 1;
-  static const double repeatCircleOffset = 13;
-  final TabContext tabContext;
+class MeasureChartPainter extends CustomPainter {
+  static const double barPad = 3;
+  static const double fatBar = 5;
+  static const double thinBar = 2;
+  static const double repeatDot = 18;
+  static const double repeatDotRadius = 3;
   final Instrument instrument;
-  final Measure measure;
   final bool last;
-  final Paint linePaint;
+  final Measure measure;
+  final StringSpacing stringSpacing;
+  final TabContext tabContext;
+
+  MeasureChartPainter(
+      {required this.instrument,
+      required this.last,
+      required this.measure,
+      required this.stringSpacing,
+      required this.tabContext});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    paintStrings(canvas, size);
+    paintMeasureDecorations(canvas, size);
+  }
+
+  void paintStrings(Canvas canvas, Size size) {
+    final path = Path();
+    for (var i = 1; i < instrument.stringCount(); i++) {
+      final y = stringSpacing.value * i;
+      path.moveTo(0, y);
+      path.lineTo(size.width, y);
+    }
+    path.addRect(Rect.fromPoints(Offset.zero, Offset(size.width, size.height)));
+    canvas.drawPath(path, tabContext.chartPaint(PaintingStyle.stroke));
+  }
+
+  void paintMeasureDecorations(Canvas canvas, Size size) {
+    final path = Path();
+    if (measure.repeatStart || measure.repeatEnd || last) {
+      addRepeatBarsToPath(path, size);
+    }
+    if (measure.repeatStart || measure.repeatEnd) {
+      addRepeatCirclesToPath(path, size);
+    }
+    canvas.drawPath(path, tabContext.chartPaint(PaintingStyle.fill));
+  }
+
+  void addRepeatBarsToPath(Path path, Size size) {
+    final fat = Rect.fromPoints(Offset.zero, Offset(fatBar, size.height));
+    final thin = Rect.fromPoints(const Offset(fatBar + barPad, 0),
+        Offset(fatBar + thinBar + barPad, size.height));
+    if (measure.repeatStart) {
+      path.addRect(fat);
+      path.addRect(thin);
+    }
+    if (measure.repeatEnd || last) {
+      path.addRect(fat.translate(size.width - fat.width, 0));
+      path.addRect(
+          thin.translate(size.width - (thin.left * 2) - thin.width, 0));
+    }
+  }
+
+  void addRepeatCirclesToPath(Path path, Size size) {
+    final top = Rect.fromCircle(
+        center: Offset(repeatDot,
+            stringSpacing.proportion(instrument.topRepeatCircleCenter())),
+        radius: repeatDotRadius);
+    final bottom = Rect.fromCircle(
+        center: Offset(repeatDot,
+            stringSpacing.proportion(instrument.bottomRepeatCircleCenter())),
+        radius: repeatDotRadius);
+    if (measure.repeatStart) {
+      path.addOval(top);
+      path.addOval(bottom);
+    }
+    if (measure.repeatEnd) {
+      path.addOval(top.translate(size.width - (repeatDot * 2), 0));
+      path.addOval(bottom.translate(size.width - (repeatDot * 2), 0));
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+extension RepeatCircleCenterFns on Instrument {
+  double topRepeatCircleCenter() => 1.5;
+
+  double bottomRepeatCircleCenter() {
+    switch (this) {
+      case Instrument.banjo:
+        return 2.5;
+      case Instrument.guitar:
+        return 3.5;
+    }
+  }
+}
+
+class MeasureNotePainter extends CustomPainter {
+  final TabContext tabContext;
+  final Measure measure;
   final Paint notationPaint;
   final NoteSpacing noteSpacing;
   final StringSpacing stringSpacing;
 
-  MeasurePainter(this.tabContext, this.instrument, this.measure, this.last,
-      {required this.noteSpacing, required this.stringSpacing})
-      : linePaint = tabContext.linePaint(),
-        notationPaint = tabContext.notationPaint();
+  MeasureNotePainter(
+      {required this.tabContext,
+      required this.measure,
+      required this.noteSpacing,
+      required this.stringSpacing})
+      : notationPaint = tabContext.notationPaint(PaintingStyle.stroke);
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawRect(
-        Rect.fromPoints(const Offset(0, 0), Offset(size.width, size.height)),
-        linePaint);
-    paintStrings(canvas, size);
-    paintNotes(canvas, size);
-
-    if (measure.repeatStart) {
-      paintRepeatLine(canvas, size, false, repeatBarOffset, repeatBarWidth);
-      paintRepeatLine(canvas, size, false, repeatLineOffset, repeatLineWidth);
-      paintRepeatDots(canvas, size, false);
-    } else if (measure.repeatEnd) {
-      paintRepeatLine(canvas, size, true, repeatBarOffset, repeatBarWidth);
-      paintRepeatLine(canvas, size, true, repeatLineOffset, repeatLineWidth);
-      paintRepeatDots(canvas, size, true);
-    } else if (last) {
-      paintRepeatLine(canvas, size, true, repeatBarOffset, repeatBarWidth);
-      paintRepeatLine(canvas, size, true, repeatLineOffset, repeatLineWidth);
-    }
-  }
-
-  void paintRepeatLine(
-      Canvas canvas, Size size, bool end, double offset, double width) {
-    var path = Path();
-    double lineOffset = end ? size.width - offset : offset;
-    path.moveTo(lineOffset, 0);
-    path.lineTo(lineOffset, size.height);
-    canvas.drawPath(path, tabContext.linePaint(width: width));
-  }
-
-  void paintRepeatDots(Canvas canvas, Size size, bool end) {
-    var paint = tabContext.linePaint(style: PaintingStyle.fill);
-    var xOffset = end ? size.width - repeatCircleOffset : repeatCircleOffset;
-    var yOffset = size.height / instrument.stringCount();
-    canvas.drawCircle(Offset(xOffset, yOffset * 1.5), 2, paint);
-    canvas.drawCircle(Offset(xOffset, yOffset * 4.5), 2, paint);
-  }
-
-  void paintNotes(Canvas canvas, Size size) {
-    for (var note in measure.notes) {
+    for (final note in measure.notes) {
       final noteX = noteSpacing.position(note.timing);
       final noteY = stringSpacing.position(note.string);
       paintNote(canvas, size, note, noteX, noteY);
@@ -178,16 +240,6 @@ class MeasurePainter extends CustomPainter {
       ..moveTo((sustain * .3) + noteX, y)
       ..lineTo((sustain * .7) + noteX, y);
     canvas.drawPath(path, notationPaint);
-  }
-
-  void paintStrings(Canvas canvas, Size size) {
-    var path = Path();
-    for (var i = 1; i < instrument.stringCount(); i++) {
-      var y = stringSpacing.value * i;
-      path.moveTo(0, y);
-      path.lineTo(size.width, y);
-    }
-    canvas.drawPath(path, linePaint);
   }
 
   @override

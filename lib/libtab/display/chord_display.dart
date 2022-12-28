@@ -27,7 +27,6 @@ class ChordChartDisplay extends StatelessWidget {
 class ChordChartPainter extends CustomPainter {
   final TabContext tabContext;
   final ChordNoteSet chord;
-  final Paint linePaint;
   final Paint notePaint;
   final int stringCount;
   double fretSpacing = 0;
@@ -35,8 +34,7 @@ class ChordChartPainter extends CustomPainter {
   double noteRadius = 0;
 
   ChordChartPainter(this.tabContext, this.chord)
-      : linePaint = tabContext.linePaint(),
-        notePaint = tabContext.notationPaint(style: PaintingStyle.fill),
+      : notePaint = tabContext.notationPaint(PaintingStyle.fill),
         stringCount = chord.instrument.stringCount();
 
   @override
@@ -59,10 +57,7 @@ class ChordChartPainter extends CustomPainter {
   }
 
   void drawFretsAndStrings(Canvas canvas, Size size) {
-    var path = Path();
-
-    canvas.drawLine(const Offset(0, 1), Offset(size.width, 1),
-        tabContext.linePaint(width: 3));
+    final path = Path();
 
     // draw frets
     for (var i = 0; i < 6; i++) {
@@ -78,7 +73,9 @@ class ChordChartPainter extends CustomPainter {
       path.lineTo(x, size.height);
     }
 
-    canvas.drawPath(path, linePaint);
+    canvas.drawPath(path, tabContext.chartPaint(PaintingStyle.stroke));
+    canvas.drawRect(Rect.fromPoints(Offset.zero, Offset(size.width, 3)),
+        tabContext.chartPaint(PaintingStyle.fill));
   }
 
   @override
