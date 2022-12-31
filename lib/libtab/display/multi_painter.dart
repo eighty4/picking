@@ -10,12 +10,11 @@ class MultiPainter extends StatelessWidget {
   final Size? size;
 
   MultiPainter(
-      {Key? key,
+      {super.key,
       this.painters,
       this.paints,
       this.size,
-      this.customPaintBuilder})
-      : super(key: key) {
+      this.customPaintBuilder}) {
     assert(painters != null || paints != null);
     assert((painters == null && painters!.isEmpty) || size != null);
   }

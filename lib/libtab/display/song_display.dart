@@ -14,7 +14,7 @@ class SongDisplay extends StatelessWidget {
   final TabContext tabContext;
   final Song song;
 
-  const SongDisplay(this.tabContext, this.song, {Key? key}) : super(key: key);
+  const SongDisplay(this.tabContext, this.song, {super.key});
 
   @override
   Widget build(BuildContext context) {

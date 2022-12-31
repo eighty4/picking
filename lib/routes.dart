@@ -1,15 +1,20 @@
-import 'instrument.dart';
+import 'package:flutter/material.dart';
+import 'controller.dart';
+import 'screens.dart';
 
-class PickingAppRoutes {
-  static const String home = "/";
+class PickingPageRoute extends MaterialPageRoute {
+  final PickingController pickingController;
 
-  static Instrument? instrumentFromRoute(String route) {
-    if (route.startsWith("/banjo")) {
-      return Instrument.banjo;
-    } else if (route.startsWith("/guitar")) {
-      return Instrument.guitar;
-    } else {
-      return null;
-    }
+  PickingPageRoute(
+      {required this.pickingController,
+      required super.builder,
+      super.settings,
+      super.fullscreenDialog,
+      super.maintainState});
+
+  @override
+  Widget buildContent(BuildContext context) {
+    return PickingAppScreen(
+        controller: pickingController, child: builder(context));
   }
 }

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:picking/libtab/libtab.dart';
-
-import 'practice.dart';
+import 'package:picking/controller.dart';
 
 class IconSet {
   final IconData left;
@@ -29,37 +27,18 @@ class IconSets {
   static const active = triangle;
 }
 
-class TvApp extends StatelessWidget {
-  const TvApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        theme: ThemeData.light(useMaterial3: true),
-        darkTheme: ThemeData.dark(useMaterial3: true),
-        home: const ScreenWidget(child: UI()));
-  }
-}
-
-class ScreenWidget extends StatelessWidget {
+class UserInterface extends StatefulWidget {
+  final PickingController controller;
   final Widget child;
 
-  const ScreenWidget({Key? key, required this.child}) : super(key: key);
+  const UserInterface(
+      {super.key, required this.child, required this.controller});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(body: SafeArea(child: child));
-  }
+  State<UserInterface> createState() => _UserInterfaceState();
 }
 
-class UI extends StatefulWidget {
-  const UI({Key? key}) : super(key: key);
-
-  @override
-  State<UI> createState() => _UIState();
-}
-
-class _UIState extends State<UI> {
+class _UserInterfaceState extends State<UserInterface> {
   static const Duration duration = Duration(milliseconds: 125);
   static const double menuOffset = 50;
 
@@ -88,7 +67,7 @@ class _UIState extends State<UI> {
         },
         const SingleActivator(LogicalKeyboardKey.arrowRight): () {
           if (open == null) {
-            // todo forward transition
+            widget.controller.next();
           } else if (open == ShiftingPosition.top) {
             // todo navigate menu
           } else if (open == ShiftingPosition.bottom) {
@@ -97,7 +76,7 @@ class _UIState extends State<UI> {
         },
         const SingleActivator(LogicalKeyboardKey.arrowLeft): () {
           if (open == null) {
-            // todo back transition
+            widget.controller.previous();
           } else if (open == ShiftingPosition.top) {
             // todo navigate menu
           } else if (open == ShiftingPosition.bottom) {
@@ -126,7 +105,7 @@ class _UIState extends State<UI> {
                       menuOpen: open == ShiftingPosition.top,
                       onOpenMenuTap: _openTopMenu,
                       onCloseMenuTap: _closeOpenMenu),
-                  const ShowMeSomeTabs(),
+                  widget.child,
                   BottomControlsRow(
                       menuOpen: open == ShiftingPosition.bottom,
                       onOpenMenuTap: _openBottomMenu,
@@ -174,12 +153,11 @@ class ShiftingContentPositioned extends StatelessWidget {
   final ShiftingPosition? open;
 
   const ShiftingContentPositioned(
-      {Key? key,
+      {super.key,
       required this.duration,
       required this.menuOffset,
       required this.open,
-      required this.child})
-      : super(key: key);
+      required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -214,14 +192,13 @@ class ShiftingMenuPositioned extends StatelessWidget {
   final double windowHeight;
 
   const ShiftingMenuPositioned(
-      {Key? key,
+      {super.key,
       required this.child,
       required this.duration,
       required this.menuHeight,
       required this.open,
       required this.position,
-      required this.windowHeight})
-      : super(key: key);
+      required this.windowHeight});
 
   @override
   Widget build(BuildContext context) {
@@ -245,7 +222,7 @@ class ShiftingMenuPositioned extends StatelessWidget {
 }
 
 class TopMenu extends StatefulWidget {
-  const TopMenu({Key? key}) : super(key: key);
+  const TopMenu({super.key});
 
   @override
   State<TopMenu> createState() => _TopMenuState();
@@ -265,15 +242,36 @@ class _TopMenuState extends State<TopMenu> {
   }
 }
 
+class BottomMenu extends StatefulWidget {
+  const BottomMenu({super.key});
+
+  @override
+  State<TopMenu> createState() => _BottomMenuState();
+}
+
+class _BottomMenuState extends State<TopMenu> {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: const [
+        Text('more'),
+        Text('menu'),
+        Text('content'),
+      ],
+    );
+  }
+}
+
 class TvControlsRow extends StatelessWidget {
   final EdgeInsets padding;
   final List<TvControl> controls;
 
   const TvControlsRow({
-    Key? key,
+    super.key,
     required this.padding,
     required this.controls,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -291,8 +289,7 @@ class TvControl extends StatelessWidget {
   final String text;
 
   const TvControl(
-      {Key? key, required this.icon, required this.onTap, required this.text})
-      : super(key: key);
+      {super.key, required this.icon, required this.onTap, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -321,11 +318,10 @@ class TopControlsRow extends StatelessWidget {
   final VoidCallback onCloseMenuTap;
 
   const TopControlsRow(
-      {Key? key,
+      {super.key,
       required this.menuOpen,
       required this.onOpenMenuTap,
-      required this.onCloseMenuTap})
-      : super(key: key);
+      required this.onCloseMenuTap});
 
   @override
   Widget build(BuildContext context) {
@@ -366,11 +362,10 @@ class BottomControlsRow extends StatelessWidget {
   final VoidCallback onCloseMenuTap;
 
   const BottomControlsRow(
-      {Key? key,
+      {super.key,
       required this.menuOpen,
       required this.onOpenMenuTap,
-      required this.onCloseMenuTap})
-      : super(key: key);
+      required this.onCloseMenuTap});
 
   @override
   Widget build(BuildContext context) {
@@ -403,22 +398,5 @@ class BottomControlsRow extends StatelessWidget {
           TvControl(
               icon: IconSets.triangle.up, text: 'close', onTap: onCloseMenuTap),
         ]);
-  }
-}
-
-class ShowMeSomeTabs extends StatelessWidget {
-  const ShowMeSomeTabs({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      PracticeScreen(
-          tabContext: TabContext.forBrightness(
-              MediaQuery.of(context).platformBrightness),
-          practice: BanjoRolls.forward)
-    ]));
   }
 }

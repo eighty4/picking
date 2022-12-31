@@ -7,9 +7,9 @@ extension NameFn on Instrument {
   String name() {
     switch (this) {
       case Instrument.banjo:
-        return "banjo";
+        return 'banjo';
       case Instrument.guitar:
-        return "guitar";
+        return 'guitar';
     }
   }
 }

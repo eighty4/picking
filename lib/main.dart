@@ -1,41 +1,34 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'dev.dart';
-import 'instrument.dart';
+import 'controller.dart';
 import 'routes.dart';
-import 'start.dart';
-import 'tv.dart';
+import 'screens.dart';
 
 void main() {
-  runApp(const TvApp());
+  runApp(PickingApp());
 }
 
 class PickingApp extends StatelessWidget {
-  const PickingApp({Key? key}) : super(key: key);
+  final PickingController controller = PickingController();
+
+  PickingApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: PickingAppRoutes.home,
+      theme: ThemeData.light(useMaterial3: true),
+      darkTheme: ThemeData.dark(useMaterial3: true),
       onGenerateRoute: (settings) {
-        Widget? page;
-        String route = settings.name!;
-        if (route == PickingAppRoutes.home) {
-          page = const StartScreen();
+        assert(settings.name != null);
+        final path = settings.name!;
+        if (kDebugMode) {
+          print(path);
         }
-        Instrument? instrument = PickingAppRoutes.instrumentFromRoute(route);
-        if (instrument != null) {
-          page = DevRouter(instrument);
-        }
-
-        assert(page != null, "paddle faster, i hear banjos!");
-
-        return MaterialPageRoute<dynamic>(
-          builder: (context) {
-            return page!;
-          },
-          settings: settings,
-        );
+        return PickingPageRoute(
+            pickingController: controller,
+            builder: (context) =>
+                PracticeScreen(pickingController: controller));
       },
     );
   }

@@ -2,21 +2,41 @@ import 'package:flutter/widgets.dart';
 import 'package:picking/libtab/libtab.dart';
 
 class MeasureDisplay extends StatelessWidget {
-  static const size = Size(300, 200);
+  static const defaultSize = Size(300, 200);
   final TabContext tabContext;
+  final Size size;
   final Instrument instrument;
   final bool last;
   final Measure measure;
+  final String? label;
 
   const MeasureDisplay(this.measure,
-      {Key? key,
+      {super.key,
+      this.size = defaultSize,
       required this.tabContext,
       required this.instrument,
-      this.last = false})
-      : super(key: key);
+      this.label,
+      this.last = false});
 
   @override
   Widget build(BuildContext context) {
+    if (label == null) {
+      return buildMeasure();
+    }
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 25),
+          child: Text(label!,
+              style:
+                  const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+        ),
+        buildMeasure()
+      ],
+    );
+  }
+
+  Container buildMeasure() {
     final stringSpacing = StringSpacing.fromPaintSize(instrument, size);
     return Container(
         color: tabContext.backgroundColor,

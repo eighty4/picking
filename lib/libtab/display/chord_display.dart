@@ -4,12 +4,16 @@ import 'package:flutter/widgets.dart';
 import 'package:picking/libtab/libtab.dart';
 
 class ChordChartDisplay extends StatelessWidget {
+  static const Size defaultSize = Size(200, 250);
   final TabContext tabContext;
+  final Size size;
   final ChordNoteSet chord;
 
   const ChordChartDisplay(
-      {Key? key, required this.tabContext, required this.chord})
-      : super(key: key);
+      {super.key,
+      this.size = defaultSize,
+      required this.tabContext,
+      required this.chord});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +22,7 @@ class ChordChartDisplay extends StatelessWidget {
           color: tabContext.backgroundColor,
           child: CustomPaint(
               willChange: false,
-              size: const Size(200, 250),
+              size: size,
               painter: ChordChartPainter(tabContext, chord))),
     );
   }
