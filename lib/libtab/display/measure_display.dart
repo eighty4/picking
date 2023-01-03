@@ -37,22 +37,27 @@ class MeasureDisplay extends StatelessWidget {
   }
 
   Container buildMeasure() {
-    final stringSpacing = StringSpacing.fromPaintSize(instrument, size);
+    final chartPositioning = ChartPositioning.calculate(size, instrument);
+    final chartPaint = CustomPaint(
+        size: size,
+        painter: MeasureChartPainter(
+            tabContext: tabContext,
+            instrument: instrument,
+            measure: measure,
+            last: last,
+            chartPositioning: chartPositioning));
+    final notesPaint = CustomPaint(
+        size: size,
+        painter: MeasureNotePainter(
+            tabContext: tabContext,
+            measure: measure,
+            chartPositioning: chartPositioning));
+    final List<Widget> children = [chartPaint, notesPaint];
     return Container(
         color: tabContext.backgroundColor,
-        child: MultiPainter(size: size, painters: [
-          MeasureChartPainter(
-              tabContext: tabContext,
-              instrument: instrument,
-              measure: measure,
-              last: last,
-              stringSpacing: stringSpacing),
-          MeasureNotePainter(
-              tabContext: tabContext,
-              measure: measure,
-              noteSpacing: NoteSpacing.fromPaintSize(size),
-              stringSpacing: StringSpacing.fromPaintSize(instrument, size)),
-        ]));
+        child: Stack(
+          children: children,
+        ));
   }
 }
 
@@ -65,14 +70,14 @@ class MeasureChartPainter extends CustomPainter {
   final Instrument instrument;
   final bool last;
   final Measure measure;
-  final StringSpacing stringSpacing;
+  final ChartPositioning chartPositioning;
   final TabContext tabContext;
 
   MeasureChartPainter(
       {required this.instrument,
       required this.last,
       required this.measure,
-      required this.stringSpacing,
+      required this.chartPositioning,
       required this.tabContext});
 
   @override
@@ -84,7 +89,7 @@ class MeasureChartPainter extends CustomPainter {
   void paintStrings(Canvas canvas, Size size) {
     final path = Path();
     for (var i = 1; i < instrument.stringCount(); i++) {
-      final y = stringSpacing.value * i;
+      final y = chartPositioning.stringSpacing * i;
       path.moveTo(0, y);
       path.lineTo(size.width, y);
     }
@@ -120,12 +125,16 @@ class MeasureChartPainter extends CustomPainter {
 
   void addRepeatCirclesToPath(Path path, Size size) {
     final top = Rect.fromCircle(
-        center: Offset(repeatDot,
-            stringSpacing.proportion(instrument.topRepeatCircleCenter())),
+        center: Offset(
+            repeatDot,
+            chartPositioning.stringSpacing *
+                instrument.topRepeatCircleCenter()),
         radius: repeatDotRadius);
     final bottom = Rect.fromCircle(
-        center: Offset(repeatDot,
-            stringSpacing.proportion(instrument.bottomRepeatCircleCenter())),
+        center: Offset(
+            repeatDot,
+            chartPositioning.stringSpacing *
+                instrument.bottomRepeatCircleCenter()),
         radius: repeatDotRadius);
     if (measure.repeatStart) {
       path.addOval(top);
@@ -158,53 +167,55 @@ class MeasureNotePainter extends CustomPainter {
   final TabContext tabContext;
   final Measure measure;
   final Paint notationPaint;
-  final NoteSpacing noteSpacing;
-  final StringSpacing stringSpacing;
+  final ChartPositioning chartPositioning;
 
   MeasureNotePainter(
       {required this.tabContext,
       required this.measure,
-      required this.noteSpacing,
-      required this.stringSpacing})
+      required this.chartPositioning})
       : notationPaint = tabContext.notationPaint(PaintingStyle.stroke);
 
   @override
   void paint(Canvas canvas, Size size) {
     for (final note in measure.notes) {
-      final noteX = noteSpacing.position(note.timing);
-      final noteY = stringSpacing.position(note.string);
-      paintNote(canvas, size, note, noteX, noteY);
+      final offset = chartPositioning.position(note);
+      paintNote(canvas, size, note, offset);
 
       if (note.slideTo != null) {
-        paintSlideLine(canvas, size, note);
-        paintNote(canvas, size, Note(note.string, note.slideTo!),
-            noteX + noteSpacing.sustain(note), noteY);
+        final releaseOffset =
+            chartPositioning.releaseNotePosition(offset, note);
+        paintSlideLine(canvas, size, offset, releaseOffset);
+        paintNote(
+            canvas, size, Note(note.string, note.slideTo!), releaseOffset);
       }
 
       if (note.hammerOn != null) {
-        paintHammerLine(canvas, size, note);
-        paintNote(canvas, size, Note(note.string, note.hammerOn!),
-            noteX + noteSpacing.sustain(note), noteY);
+        final releaseOffset =
+            chartPositioning.releaseNotePosition(offset, note);
+        paintHammerLine(canvas, size, offset, releaseOffset);
+        paintNote(
+            canvas, size, Note(note.string, note.hammerOn!), releaseOffset);
       }
 
       if (note.pullOff != null) {
-        paintPullLine(canvas, size, note);
-        paintNote(canvas, size, Note(note.string, note.pullOff!),
-            noteX + noteSpacing.sustain(note), noteY);
+        final releaseOffset =
+            chartPositioning.releaseNotePosition(offset, note);
+        paintPullLine(canvas, size, offset, releaseOffset);
+        paintNote(
+            canvas, size, Note(note.string, note.pullOff!), releaseOffset);
       }
 
       if (note.and != null) {
         for (var and = note.and; and != null;) {
-          final noteY = stringSpacing.position(and.string);
-          paintNote(canvas, size, and, noteX, noteY);
+          paintNote(canvas, size, and,
+              Offset(offset.dx, chartPositioning.yPosition(and)));
           and = and.and;
         }
       }
     }
   }
 
-  void paintNote(
-      Canvas canvas, Size size, Note note, double noteX, double noteY) {
+  void paintNote(Canvas canvas, Size size, Note note, Offset offset) {
     final textStyle = TextStyle(color: tabContext.notationColor, fontSize: 24);
     final textSpan = TextSpan(text: note.fret.toString(), style: textStyle);
     final textPainter = TextPainter(
@@ -216,49 +227,45 @@ class MeasureNotePainter extends CustomPainter {
       minWidth: 30,
       maxWidth: size.width,
     );
-    final offset = Offset(noteX - 15, noteY - 14);
-    textPainter.paint(canvas, offset);
+    textPainter.paint(canvas, offset.translate(-15, -14));
 
     if (note.melody) {
-      canvas.drawCircle(Offset(noteX, noteY), 16, notationPaint);
+      canvas.drawCircle(offset, 16, notationPaint);
     }
   }
 
-  void paintHammerLine(Canvas canvas, Size size, Note note) {
-    final y = stringSpacing.sustainNotationPositionAbove(note.string);
-    final noteX = noteSpacing.position(note.timing);
-    final sustain = noteSpacing.sustain(note);
-    final xTo = (sustain * .3) + noteX;
-    final xFrom = (sustain * .7) + noteX;
+  void paintHammerLine(
+      Canvas canvas, Size size, Offset noteOffset, Offset releaseOffset) {
+    final y = releaseOffset.dy - (chartPositioning.stringSpacing * .3);
+    final xTo = releaseOffset.dx - 8;
+    final xFrom = noteOffset.dx + 8;
     final xControl = ((xTo - xFrom) / 2) + xFrom;
-    final yControl = y - stringSpacing.proportion(.3);
+    final yControl = y - (chartPositioning.stringSpacing * .3);
     final path = Path()
       ..moveTo(xFrom, y)
       ..quadraticBezierTo(xControl, yControl, xTo, y);
     canvas.drawPath(path, notationPaint);
   }
 
-  void paintPullLine(Canvas canvas, Size size, Note note) {
-    final y = stringSpacing.sustainNotationPositionBelow(note.string);
-    final noteX = noteSpacing.position(note.timing);
-    final sustain = noteSpacing.sustain(note);
-    final xTo = (sustain * .3) + noteX;
-    final xFrom = (sustain * .7) + noteX;
+  void paintPullLine(
+      Canvas canvas, Size size, Offset noteOffset, Offset releaseOffset) {
+    final y = releaseOffset.dy + (chartPositioning.stringSpacing * .3);
+    final xTo = releaseOffset.dx - 8;
+    final xFrom = noteOffset.dx + 8;
     final xControl = ((xTo - xFrom) / 2) + xFrom;
-    final yControl = y + stringSpacing.proportion(.3);
+    final yControl = y + (chartPositioning.stringSpacing * .3);
     final path = Path()
       ..moveTo(xFrom, y)
       ..quadraticBezierTo(xControl, yControl, xTo, y);
     canvas.drawPath(path, notationPaint);
   }
 
-  void paintSlideLine(Canvas canvas, Size size, Note note) {
-    final y = stringSpacing.sustainNotationPositionAbove(note.string);
-    final noteX = noteSpacing.position(note.timing);
-    final sustain = noteSpacing.sustain(note);
+  void paintSlideLine(
+      Canvas canvas, Size size, Offset noteOffset, Offset releaseOffset) {
+    final y = releaseOffset.dy - (chartPositioning.stringSpacing * .3);
     final path = Path()
-      ..moveTo((sustain * .3) + noteX, y)
-      ..lineTo((sustain * .7) + noteX, y);
+      ..moveTo(noteOffset.dx + 8, y)
+      ..lineTo(releaseOffset.dx - 8, y);
     canvas.drawPath(path, notationPaint);
   }
 
