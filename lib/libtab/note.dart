@@ -24,18 +24,21 @@ extension NotesPerMeasureFn on NoteType {
 }
 
 class Timing {
+  /// type of note
   final NoteType type;
-  final int beats;
 
-  const Timing(this.type, this.beats);
+  /// 1-indexed placement in measure
+  final int nth;
+
+  const Timing(this.type, this.nth);
 
   factory Timing.withinNoteList(
       {required int listLength, required int noteIndex}) {
     return Timing(notesPerMeasureToNoteType(listLength), noteIndex + 1);
   }
 
-  static NoteType notesPerMeasureToNoteType(int bpm) {
-    switch (bpm) {
+  static NoteType notesPerMeasureToNoteType(int noteCount) {
+    switch (noteCount) {
       case 16:
         return NoteType.sixteenth;
       case 8:
@@ -47,7 +50,11 @@ class Timing {
       case 1:
         return NoteType.whole;
       default:
-        throw ArgumentError('$bpm is not valid note count per measure');
+        if (noteCount < 8) {
+          return NoteType.eighth;
+        } else {
+          return NoteType.sixteenth;
+        }
     }
   }
 }
@@ -102,7 +109,7 @@ class Note {
   }
 
   Note copyWithTiming(Timing timing) {
-    assert(timing.beats > 0);
+    assert(timing.nth > 0);
     return Note(
       string,
       fret,

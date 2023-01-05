@@ -33,13 +33,13 @@ class ChartPositioning {
       Offset(xPosition(note), yPosition(note));
 
   double xPosition(Note note) =>
-      note.timing.beats * noteSpacingFromNoteType(note.timing.type);
+      note.timing.nth * noteSpacingFromNoteType(note.timing.type);
 
   double yPosition(Note note) => (note.string - 1) * stringSpacing;
 
   Offset releaseNotePosition(Offset offset, Note note) {
     final translateX = note.length != null
-        ? note.length!.beats * noteSpacingFromNoteType(note.length!.type)
+        ? note.length!.nth * noteSpacingFromNoteType(note.length!.type)
         : noteSpacingFromNoteType(note.timing.type);
     return offset.translate(translateX, 0);
   }
