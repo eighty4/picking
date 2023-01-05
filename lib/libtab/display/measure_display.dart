@@ -53,6 +53,13 @@ class MeasureDisplay extends StatelessWidget {
             measure: measure,
             chartPositioning: chartPositioning));
     final List<Widget> children = [chartPaint, notesPaint];
+    if (tabContext.metronomeConfig.enabled) {
+      final metronome = Metronome.forNotes(measure.notes,
+          size: size,
+          chartPositioning: chartPositioning,
+          tabContext: tabContext);
+      children.insert(1, metronome);
+    }
     return Container(
         color: tabContext.backgroundColor,
         child: Stack(

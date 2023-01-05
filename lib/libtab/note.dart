@@ -21,6 +21,21 @@ extension NotesPerMeasureFn on NoteType {
         return 16;
     }
   }
+
+  double fractionOfMeasure() {
+    switch (this) {
+      case NoteType.whole:
+        return 1;
+      case NoteType.half:
+        return .5;
+      case NoteType.quarter:
+        return .25;
+      case NoteType.eighth:
+        return .125;
+      case NoteType.sixteenth:
+        return .0625;
+    }
+  }
 }
 
 class Timing {
