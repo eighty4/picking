@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:picking/controller.dart';
+
+import 'controller.dart';
+import 'menu.dart';
 
 class IconSet {
   final IconData left;
@@ -40,7 +42,6 @@ class UserInterface extends StatefulWidget {
 
 class _UserInterfaceState extends State<UserInterface> {
   static const Duration duration = Duration(milliseconds: 125);
-  static const double menuOffset = 50;
 
   ShiftingPosition? open;
 
@@ -89,7 +90,7 @@ class _UserInterfaceState extends State<UserInterface> {
         child: Stack(children: [
           ShiftingMenuPositioned(
             duration: duration,
-            menuHeight: menuOffset,
+            menuHeight: TopMenu.height,
             open: open == ShiftingPosition.top,
             position: ShiftingPosition.top,
             windowHeight: height,
@@ -97,7 +98,8 @@ class _UserInterfaceState extends State<UserInterface> {
           ),
           ShiftingContentPositioned(
               duration: duration,
-              menuOffset: menuOffset,
+              topMenuHeight: TopMenu.height,
+              bottomMenuHeight: BottomMenu.height,
               open: open,
               child: Column(
                 children: [
@@ -114,11 +116,11 @@ class _UserInterfaceState extends State<UserInterface> {
               )),
           ShiftingMenuPositioned(
             duration: duration,
-            menuHeight: menuOffset,
+            menuHeight: BottomMenu.height,
             open: open == ShiftingPosition.bottom,
             position: ShiftingPosition.bottom,
             windowHeight: height,
-            child: const TopMenu(),
+            child: const BottomMenu(),
           ),
         ]),
       ),
@@ -149,13 +151,15 @@ enum ShiftingPosition { top, bottom }
 class ShiftingContentPositioned extends StatelessWidget {
   final Widget child;
   final Duration duration;
-  final double menuOffset;
+  final double topMenuHeight;
+  final double bottomMenuHeight;
   final ShiftingPosition? open;
 
   const ShiftingContentPositioned(
       {super.key,
       required this.duration,
-      required this.menuOffset,
+      required this.topMenuHeight,
+      required this.bottomMenuHeight,
       required this.open,
       required this.child});
 
@@ -173,8 +177,12 @@ class ShiftingContentPositioned extends StatelessWidget {
     } else {
       return AnimatedPositioned(
         duration: duration,
-        top: open == ShiftingPosition.bottom ? -1 * menuOffset : menuOffset,
-        bottom: open == ShiftingPosition.top ? -1 * menuOffset : menuOffset,
+        top: open == ShiftingPosition.bottom
+            ? -1 * bottomMenuHeight
+            : topMenuHeight,
+        bottom: open == ShiftingPosition.top
+            ? -1 * topMenuHeight
+            : bottomMenuHeight,
         left: 0,
         right: 0,
         child: child,
@@ -221,35 +229,16 @@ class ShiftingMenuPositioned extends StatelessWidget {
   }
 }
 
-class TopMenu extends StatefulWidget {
-  const TopMenu({super.key});
-
-  @override
-  State<TopMenu> createState() => _TopMenuState();
-}
-
-class _TopMenuState extends State<TopMenu> {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: const [
-        Text('some'),
-        Text('menu'),
-        Text('content'),
-      ],
-    );
-  }
-}
-
 class BottomMenu extends StatefulWidget {
+  static const double height = 50;
+
   const BottomMenu({super.key});
 
   @override
-  State<TopMenu> createState() => _BottomMenuState();
+  State<BottomMenu> createState() => _BottomMenuState();
 }
 
-class _BottomMenuState extends State<TopMenu> {
+class _BottomMenuState extends State<BottomMenu> {
   @override
   Widget build(BuildContext context) {
     return Row(
