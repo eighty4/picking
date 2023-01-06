@@ -1,6 +1,5 @@
+import 'chord.dart';
 import 'instrument.dart';
-
-enum Chord { a, am, c, d, d7, em, f, g }
 
 enum Finger { t, m, i }
 

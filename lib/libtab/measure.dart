@@ -1,3 +1,4 @@
+import 'chord.dart';
 import 'note.dart';
 
 class Measure {

@@ -1,5 +1,6 @@
 library libtab;
 
+export 'chord.dart';
 export 'context.dart';
 export 'instrument.dart';
 export 'measure.dart';
