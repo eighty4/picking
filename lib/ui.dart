@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'controller.dart';
 import 'menu.dart';
+import 'theme.dart';
 
 class IconSet {
   final IconData left;
@@ -252,11 +253,11 @@ class _BottomMenuState extends State<BottomMenu> {
   }
 }
 
-class TvControlsRow extends StatelessWidget {
+class NavigationControlRow extends StatelessWidget {
   final EdgeInsets padding;
-  final List<TvControl> controls;
+  final List<NavigationControl> controls;
 
-  const TvControlsRow({
+  const NavigationControlRow({
     super.key,
     required this.padding,
     required this.controls,
@@ -272,16 +273,17 @@ class TvControlsRow extends StatelessWidget {
   }
 }
 
-class TvControl extends StatelessWidget {
+class NavigationControl extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
   final String text;
 
-  const TvControl(
+  const NavigationControl(
       {super.key, required this.icon, required this.onTap, required this.text});
 
   @override
   Widget build(BuildContext context) {
+    final navigationColor = PickingTheme.of(context).navigationColor;
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -290,7 +292,7 @@ class TvControl extends StatelessWidget {
           text: TextSpan(text: '', children: [
             WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
-                child: Icon(icon, size: 35)),
+                child: Icon(icon, size: 45, color: navigationColor)),
             TextSpan(text: ' $text', style: DefaultTextStyle.of(context).style)
           ]),
         ),
@@ -320,22 +322,22 @@ class TopControlsRow extends StatelessWidget {
     );
   }
 
-  TvControlsRow _buildMenuClosed() {
-    return TvControlsRow(
+  NavigationControlRow _buildMenuClosed() {
+    return NavigationControlRow(
         key: closedKey,
         padding: const EdgeInsets.only(top: 5),
         controls: [
-          TvControl(
+          NavigationControl(
               icon: IconSets.triangle.up, text: 'menu', onTap: onOpenMenuTap),
         ]);
   }
 
-  TvControlsRow _buildMenuOpen() {
-    return TvControlsRow(
+  NavigationControlRow _buildMenuOpen() {
+    return NavigationControlRow(
         key: openKey,
         padding: const EdgeInsets.only(top: 5),
         controls: [
-          TvControl(
+          NavigationControl(
               icon: IconSets.triangle.down,
               text: 'close',
               onTap: onCloseMenuTap),
@@ -364,27 +366,28 @@ class BottomControlsRow extends StatelessWidget {
     );
   }
 
-  TvControlsRow _buildMenuClosed() {
-    return TvControlsRow(
+  NavigationControlRow _buildMenuClosed() {
+    return NavigationControlRow(
         key: closedKey,
         padding: const EdgeInsets.only(bottom: 5),
         controls: [
-          TvControl(icon: IconSets.triangle.left, text: 'back', onTap: () {}),
-          TvControl(
+          NavigationControl(
+              icon: IconSets.triangle.left, text: 'back', onTap: () {}),
+          NavigationControl(
               icon: IconSets.triangle.down,
               text: 'metronome',
               onTap: onOpenMenuTap),
-          TvControl(
+          NavigationControl(
               icon: IconSets.triangle.right, text: 'forward', onTap: () {}),
         ]);
   }
 
-  TvControlsRow _buildMenuOpen() {
-    return TvControlsRow(
+  NavigationControlRow _buildMenuOpen() {
+    return NavigationControlRow(
         key: openKey,
         padding: const EdgeInsets.only(bottom: 5),
         controls: [
-          TvControl(
+          NavigationControl(
               icon: IconSets.triangle.up, text: 'close', onTap: onCloseMenuTap),
         ]);
   }

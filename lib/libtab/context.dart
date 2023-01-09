@@ -3,12 +3,21 @@ import 'package:flutter/material.dart';
 class TabContext {
   final Color backgroundColor;
   final Color chartColor;
-  final Color notationColor;
+  final Color noteLabelColor;
+  final Color noteShapeColor;
+
+  TabContext(
+      {this.backgroundColor = Colors.transparent,
+      required this.chartColor,
+      required this.noteLabelColor,
+      required this.noteShapeColor});
 
   TabContext.forBrightness(Brightness brightness)
       : backgroundColor = Colors.transparent,
         chartColor = Colors.blueGrey,
-        notationColor =
+        noteLabelColor =
+            brightness == Brightness.dark ? Colors.black : Colors.white,
+        noteShapeColor =
             brightness == Brightness.dark ? Colors.white : Colors.black;
 
   Paint chartPaint(PaintingStyle style, {double width = 1}) {
@@ -18,10 +27,17 @@ class TabContext {
       ..color = chartColor;
   }
 
-  Paint notationPaint(PaintingStyle style, {double width = 2}) {
+  Paint noteLabelPaint(PaintingStyle style, {double width = 2}) {
     return Paint()
       ..strokeWidth = width
       ..style = style
-      ..color = notationColor;
+      ..color = noteLabelColor;
+  }
+
+  Paint noteShapePaint(PaintingStyle style, {double width = 2}) {
+    return Paint()
+      ..strokeWidth = width
+      ..style = style
+      ..color = noteShapeColor;
   }
 }

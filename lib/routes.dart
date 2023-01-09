@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:picking/libtab/libtab.dart';
 
 import 'controller.dart';
+import 'theme.dart';
 import 'ui.dart';
 
 enum NavPath { pairings, root, songs }
@@ -190,10 +191,15 @@ class PickingAppScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
-            child: PickingControllerModel(
-                controller: controller,
-                child: UserInterface(controller: controller, child: child))));
+    final theme = PickingThemeData.darkBlue();
+    return PickingTheme(
+      theme: theme,
+      child: Scaffold(
+          backgroundColor: theme.backgroundColor,
+          body: SafeArea(
+              child: PickingControllerModel(
+                  controller: controller,
+                  child: UserInterface(controller: controller, child: child)))),
+    );
   }
 }

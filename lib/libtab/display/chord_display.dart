@@ -38,7 +38,7 @@ class ChordChartPainter extends CustomPainter {
   double noteRadius = 0;
 
   ChordChartPainter(this.tabContext, this.chord)
-      : notePaint = tabContext.notationPaint(PaintingStyle.fill),
+      : notePaint = tabContext.noteShapePaint(PaintingStyle.fill),
         stringCount = chord.instrument.stringCount();
 
   @override

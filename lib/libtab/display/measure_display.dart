@@ -166,14 +166,14 @@ extension RepeatCircleCenterFns on Instrument {
 class MeasureNotePainter extends CustomPainter {
   final TabContext tabContext;
   final Measure measure;
-  final Paint notationPaint;
+  final Paint notePaint;
   final ChartPositioning chartPositioning;
 
   MeasureNotePainter(
       {required this.tabContext,
       required this.measure,
       required this.chartPositioning})
-      : notationPaint = tabContext.notationPaint(PaintingStyle.stroke);
+      : notePaint = tabContext.noteShapePaint(PaintingStyle.stroke);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -216,7 +216,7 @@ class MeasureNotePainter extends CustomPainter {
   }
 
   void paintNote(Canvas canvas, Size size, Note note, Offset offset) {
-    final textStyle = TextStyle(color: tabContext.notationColor, fontSize: 24);
+    final textStyle = TextStyle(color: tabContext.noteLabelColor, fontSize: 24);
     final textSpan = TextSpan(text: note.fret.toString(), style: textStyle);
     final textPainter = TextPainter(
       text: textSpan,
@@ -230,7 +230,7 @@ class MeasureNotePainter extends CustomPainter {
     textPainter.paint(canvas, offset.translate(-15, -14));
 
     if (note.melody) {
-      canvas.drawCircle(offset, 16, notationPaint);
+      canvas.drawCircle(offset, 16, notePaint);
     }
   }
 
@@ -244,7 +244,7 @@ class MeasureNotePainter extends CustomPainter {
     final path = Path()
       ..moveTo(xFrom, y)
       ..quadraticBezierTo(xControl, yControl, xTo, y);
-    canvas.drawPath(path, notationPaint);
+    canvas.drawPath(path, notePaint);
   }
 
   void paintPullLine(
@@ -257,7 +257,7 @@ class MeasureNotePainter extends CustomPainter {
     final path = Path()
       ..moveTo(xFrom, y)
       ..quadraticBezierTo(xControl, yControl, xTo, y);
-    canvas.drawPath(path, notationPaint);
+    canvas.drawPath(path, notePaint);
   }
 
   void paintSlideLine(
@@ -266,7 +266,7 @@ class MeasureNotePainter extends CustomPainter {
     final path = Path()
       ..moveTo(noteOffset.dx + 8, y)
       ..lineTo(releaseOffset.dx - 8, y);
-    canvas.drawPath(path, notationPaint);
+    canvas.drawPath(path, notePaint);
   }
 
   @override
