@@ -53,7 +53,10 @@ class ChordChartPainter extends CustomPainter {
   void drawNote(Canvas canvas, Size size, Note note) {
     final x = size.width - (note.string - 1) * stringSpacing;
     final y = ((note.fret - 1) * fretSpacing) + (fretSpacing / 2);
-    canvas.drawCircle(Offset(x, y), noteRadius, notePaint);
+    final path = Path()
+      ..addOval(Rect.fromCircle(center: Offset(x, y), radius: noteRadius));
+    canvas.drawShadow(path, tabContext.noteLabelColor, 6, false);
+    canvas.drawPath(path, notePaint);
 
     if (note.and != null) {
       drawNote(canvas, size, note.and!);

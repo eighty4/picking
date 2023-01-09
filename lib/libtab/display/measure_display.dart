@@ -166,14 +166,16 @@ extension RepeatCircleCenterFns on Instrument {
 class MeasureNotePainter extends CustomPainter {
   final TabContext tabContext;
   final Measure measure;
-  final Paint notePaint;
+  final Paint noteLabelPaint;
+  final Paint noteShapePaint;
   final ChartPositioning chartPositioning;
 
   MeasureNotePainter(
       {required this.tabContext,
       required this.measure,
       required this.chartPositioning})
-      : notePaint = tabContext.noteShapePaint(PaintingStyle.stroke);
+      : noteLabelPaint = tabContext.noteLabelPaint(PaintingStyle.stroke),
+        noteShapePaint = tabContext.noteShapePaint(PaintingStyle.fill);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -216,7 +218,13 @@ class MeasureNotePainter extends CustomPainter {
   }
 
   void paintNote(Canvas canvas, Size size, Note note, Offset offset) {
-    final textStyle = TextStyle(color: tabContext.noteLabelColor, fontSize: 24);
+    // todo dynamic size and position
+    final path = Path()
+      ..addOval(Rect.fromCircle(center: offset, radius: 12));
+    canvas.drawShadow(path, tabContext.noteLabelColor, 6, false);
+    canvas.drawPath(path, noteShapePaint);
+
+    final textStyle = TextStyle(color: tabContext.noteLabelColor, fontSize: 22);
     final textSpan = TextSpan(text: note.fret.toString(), style: textStyle);
     final textPainter = TextPainter(
       text: textSpan,
@@ -227,10 +235,10 @@ class MeasureNotePainter extends CustomPainter {
       minWidth: 30,
       maxWidth: size.width,
     );
-    textPainter.paint(canvas, offset.translate(-15, -14));
+    textPainter.paint(canvas, offset.translate(-15, -13));
 
     if (note.melody) {
-      canvas.drawCircle(offset, 16, notePaint);
+      canvas.drawCircle(offset, 16, noteLabelPaint);
     }
   }
 
@@ -244,7 +252,7 @@ class MeasureNotePainter extends CustomPainter {
     final path = Path()
       ..moveTo(xFrom, y)
       ..quadraticBezierTo(xControl, yControl, xTo, y);
-    canvas.drawPath(path, notePaint);
+    canvas.drawPath(path, noteShapePaint);
   }
 
   void paintPullLine(
@@ -257,7 +265,7 @@ class MeasureNotePainter extends CustomPainter {
     final path = Path()
       ..moveTo(xFrom, y)
       ..quadraticBezierTo(xControl, yControl, xTo, y);
-    canvas.drawPath(path, notePaint);
+    canvas.drawPath(path, noteShapePaint);
   }
 
   void paintSlideLine(
@@ -266,7 +274,7 @@ class MeasureNotePainter extends CustomPainter {
     final path = Path()
       ..moveTo(noteOffset.dx + 8, y)
       ..lineTo(releaseOffset.dx - 8, y);
-    canvas.drawPath(path, notePaint);
+    canvas.drawPath(path, noteShapePaint);
   }
 
   @override
