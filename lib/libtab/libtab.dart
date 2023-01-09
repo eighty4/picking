@@ -9,4 +9,3 @@ export 'technique.dart';
 export 'display/chart_positioning.dart';
 export 'display/chord_display.dart';
 export 'display/measure_display.dart';
-export 'display/multi_painter.dart';
