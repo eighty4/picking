@@ -6,7 +6,7 @@ import 'package:picking/libtab/instrument.dart';
 export 'package:picking/libtab/instrument.dart';
 
 extension IconFn on Instrument {
-  SvgPicture icon() {
+  SvgPicture svg() {
     switch (this) {
       case Instrument.banjo:
         return SvgPicture.asset('assets/banjo_nav.svg',
@@ -38,7 +38,7 @@ class InstrumentIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(height: height, width: width, child: instrument.icon());
+    return SizedBox(height: height, width: width, child: instrument.svg());
   }
 }
 
