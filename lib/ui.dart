@@ -5,31 +5,6 @@ import 'controller.dart';
 import 'menu.dart';
 import 'theme.dart';
 
-class IconSet {
-  final IconData left;
-  final IconData up;
-  final IconData right;
-  final IconData down;
-
-  const IconSet(
-      {required this.left,
-      required this.up,
-      required this.right,
-      required this.down});
-}
-
-class IconSets {
-  IconSets._();
-
-  static const triangle = IconSet(
-      left: Icons.arrow_left,
-      up: Icons.arrow_drop_up,
-      right: Icons.arrow_right,
-      down: Icons.arrow_drop_down);
-
-  static const active = triangle;
-}
-
 class UserInterface extends StatefulWidget {
   final PickingController controller;
   final Widget child;
@@ -48,7 +23,6 @@ class _UserInterfaceState extends State<UserInterface> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
     return CallbackShortcuts(
       bindings: <ShortcutActivator, VoidCallback>{
         const SingleActivator(LogicalKeyboardKey.arrowUp): () {
@@ -89,18 +63,8 @@ class _UserInterfaceState extends State<UserInterface> {
       child: Focus(
         autofocus: true,
         child: Stack(children: [
-          ShiftingMenuPositioned(
-            duration: duration,
-            menuHeight: TopMenu.height,
-            open: open == ShiftingPosition.top,
-            position: ShiftingPosition.top,
-            windowHeight: height,
-            child: const TopMenu(),
-          ),
-          ShiftingContentPositioned(
-              duration: duration,
-              topMenuHeight: TopMenu.height,
-              bottomMenuHeight: BottomMenu.height,
+          // todo perf improvement could be one AnimatedPositioned with overflow
+          ShiftingPositioned(
               open: open,
               child: Column(
                 children: [
@@ -115,14 +79,19 @@ class _UserInterfaceState extends State<UserInterface> {
                       onCloseMenuTap: _closeOpenMenu),
                 ],
               )),
-          ShiftingMenuPositioned(
-            duration: duration,
-            menuHeight: BottomMenu.height,
-            open: open == ShiftingPosition.bottom,
-            position: ShiftingPosition.bottom,
-            windowHeight: height,
-            child: const BottomMenu(),
-          ),
+          AnimatedPositioned(
+              duration: duration,
+              top: open == ShiftingPosition.top ? 0 : -1 * TopMenu.height,
+              left: 0,
+              right: 0,
+              child: const TopMenu()),
+          AnimatedPositioned(
+              duration: duration,
+              bottom:
+                  open == ShiftingPosition.bottom ? 0 : -1 * BottomMenu.height,
+              left: 0,
+              right: 0,
+              child: const BottomMenu()),
         ]),
       ),
     );
@@ -149,83 +118,44 @@ class _UserInterfaceState extends State<UserInterface> {
 
 enum ShiftingPosition { top, bottom }
 
-class ShiftingContentPositioned extends StatelessWidget {
+class ShiftingPositioned extends StatelessWidget {
+  static const Duration duration = Duration(milliseconds: 125);
   final Widget child;
-  final Duration duration;
-  final double topMenuHeight;
-  final double bottomMenuHeight;
   final ShiftingPosition? open;
 
-  const ShiftingContentPositioned(
-      {super.key,
-      required this.duration,
-      required this.topMenuHeight,
-      required this.bottomMenuHeight,
-      required this.open,
-      required this.child});
+  const ShiftingPositioned(
+      {super.key, required this.open, required this.child});
 
   @override
   Widget build(BuildContext context) {
-    if (open == null) {
-      return AnimatedPositioned(
-        duration: duration,
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        child: child,
-      );
-    } else {
-      return AnimatedPositioned(
-        duration: duration,
-        top: open == ShiftingPosition.bottom
-            ? -1 * bottomMenuHeight
-            : topMenuHeight,
-        bottom: open == ShiftingPosition.top
-            ? -1 * topMenuHeight
-            : bottomMenuHeight,
-        left: 0,
-        right: 0,
-        child: child,
-      );
-    }
-  }
-}
-
-class ShiftingMenuPositioned extends StatelessWidget {
-  final Widget child;
-  final Duration duration;
-  final double menuHeight;
-  final bool open;
-  final ShiftingPosition position;
-  final double windowHeight;
-
-  const ShiftingMenuPositioned(
-      {super.key,
-      required this.child,
-      required this.duration,
-      required this.menuHeight,
-      required this.open,
-      required this.position,
-      required this.windowHeight});
-
-  @override
-  Widget build(BuildContext context) {
-    switch (position) {
+    switch (open) {
       case ShiftingPosition.top:
         return AnimatedPositioned(
-            duration: duration,
-            top: open ? 0 : -1 * menuHeight,
-            left: 0,
-            right: 0,
-            child: SizedBox(height: menuHeight, child: child));
+          duration: duration,
+          top: TopMenu.height,
+          bottom: -1 * TopMenu.height,
+          left: 0,
+          right: 0,
+          child: child,
+        );
       case ShiftingPosition.bottom:
         return AnimatedPositioned(
-            duration: duration,
-            bottom: open ? 0 : -1 * menuHeight,
-            left: 0,
-            right: 0,
-            child: SizedBox(height: menuHeight, child: child));
+          duration: duration,
+          top: -1 * BottomMenu.height,
+          bottom: BottomMenu.height,
+          left: 0,
+          right: 0,
+          child: child,
+        );
+      case null:
+        return AnimatedPositioned(
+          duration: duration,
+          top: 0,
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: child,
+        );
     }
   }
 }
@@ -242,13 +172,16 @@ class BottomMenu extends StatefulWidget {
 class _BottomMenuState extends State<BottomMenu> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: const [
-        Text('more'),
-        Text('menu'),
-        Text('content'),
-      ],
+    return SizedBox(
+      height: BottomMenu.height,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: const [
+          Text('more'),
+          Text('menu'),
+          Text('content'),
+        ],
+      ),
     );
   }
 }
@@ -328,7 +261,7 @@ class TopControlsRow extends StatelessWidget {
         padding: const EdgeInsets.only(top: 5),
         controls: [
           NavigationControl(
-              icon: IconSets.triangle.up, text: 'menu', onTap: onOpenMenuTap),
+              icon: Icons.arrow_drop_up, text: 'menu', onTap: onOpenMenuTap),
         ]);
   }
 
@@ -338,7 +271,7 @@ class TopControlsRow extends StatelessWidget {
         padding: const EdgeInsets.only(top: 5),
         controls: [
           NavigationControl(
-              icon: IconSets.triangle.down,
+              icon: Icons.arrow_drop_down,
               text: 'close',
               onTap: onCloseMenuTap),
         ]);
@@ -371,14 +304,13 @@ class BottomControlsRow extends StatelessWidget {
         key: closedKey,
         padding: const EdgeInsets.only(bottom: 5),
         controls: [
+          NavigationControl(icon: Icons.arrow_left, text: 'back', onTap: () {}),
           NavigationControl(
-              icon: IconSets.triangle.left, text: 'back', onTap: () {}),
-          NavigationControl(
-              icon: IconSets.triangle.down,
+              icon: Icons.arrow_drop_down,
               text: 'metronome',
               onTap: onOpenMenuTap),
           NavigationControl(
-              icon: IconSets.triangle.right, text: 'forward', onTap: () {}),
+              icon: Icons.arrow_right, text: 'forward', onTap: () {}),
         ]);
   }
 
@@ -388,7 +320,7 @@ class BottomControlsRow extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 5),
         controls: [
           NavigationControl(
-              icon: IconSets.triangle.up, text: 'close', onTap: onCloseMenuTap),
+              icon: Icons.arrow_drop_up, text: 'close', onTap: onCloseMenuTap),
         ]);
   }
 }
