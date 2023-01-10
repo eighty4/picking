@@ -9,11 +9,9 @@ extension IconFn on Instrument {
   SvgPicture svg() {
     switch (this) {
       case Instrument.banjo:
-        return SvgPicture.asset('assets/banjo_nav.svg',
-            semanticsLabel: 'Banjo');
+        return SvgPicture.asset('assets/Banjo.svg', semanticsLabel: 'Banjo');
       case Instrument.guitar:
-        return SvgPicture.asset('assets/guitar_nav.svg',
-            semanticsLabel: 'Guitar');
+        return SvgPicture.asset('assets/Guitar.svg', semanticsLabel: 'Guitar');
     }
   }
 }
@@ -27,19 +25,21 @@ extension OtherFn on Instrument {
 class InstrumentIcon extends StatelessWidget {
   final Instrument instrument;
   final double height;
-  final double width;
 
   const InstrumentIcon(
     this.instrument, {
     super.key,
     this.height = 50,
-    this.width = 50,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(height: height, width: width, child: instrument.svg());
+    return SizedBox.square(dimension: height, child: instrument.svg());
   }
+}
+
+class CloudSvg extends SvgPicture {
+  CloudSvg({super.key}) : super.asset('assets/Cloud.svg');
 }
 
 class InstrumentModel extends InheritedWidget {

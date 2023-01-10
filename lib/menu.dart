@@ -37,7 +37,7 @@ class SelectedInstrument extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const InstrumentIcon(Instrument.banjo, height: 80, width: 80);
+    return const InstrumentIcon(Instrument.banjo, height: 80);
   }
 }
 
