@@ -41,7 +41,12 @@ class SelectedInstrument extends StatelessWidget {
   }
 }
 
-class MenuNavLink extends StatelessWidget {
+class MenuNavLink extends StatefulWidget {
+  static const EdgeInsets iconPadding =
+      EdgeInsets.only(left: 9, right: 9, bottom: 1);
+  static const EdgeInsets textPadding =
+      EdgeInsets.only(left: 9, right: 9, bottom: 2);
+
   final IconData? icon;
   final String? text;
   final String path;
@@ -50,18 +55,41 @@ class MenuNavLink extends StatelessWidget {
       : assert(icon != null || text != null);
 
   @override
+  State<MenuNavLink> createState() => _MenuNavLinkState();
+}
+
+class _MenuNavLinkState extends State<MenuNavLink> {
+  bool hover = false;
+
+  @override
   Widget build(BuildContext context) {
-    final Color color = PickingTheme.of(context).textColor;
-    final Widget child = text == null
-        ? Icon(icon, size: 30, color: color)
-        : Text(text!, style: textStyle(color));
-    return MouseRegion(
-        cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-            onTap: () {
-              Navigator.of(context).pushNamed(path);
-            },
-            child: child));
+    final PickingThemeData theme = PickingTheme.of(context);
+    final Widget child = widget.text == null
+        ? Icon(widget.icon, size: 30, color: theme.textColor)
+        : Text(widget.text!, style: textStyle(theme.textColor));
+    return Stack(children: [
+      MouseRegion(
+          onEnter: (event) => setState(() => hover = true),
+          onExit: (event) => setState(() => hover = false),
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed(widget.path);
+              },
+              child: Container(
+                  height: 50,
+                  padding: widget.text == null
+                      ? MenuNavLink.iconPadding
+                      : MenuNavLink.textPadding,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: hover
+                              ? theme.navigationColor
+                              : Colors.transparent,
+                          width: 2),
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Center(child: child)))),
+    ]);
   }
 
   TextStyle textStyle(Color color) {
