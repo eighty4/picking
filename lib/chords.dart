@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:picking/libtab/libtab.dart';
 
+import 'banjo.dart';
 import 'routes.dart';
+import 'theme.dart';
 
 class ChordsRoute extends StatelessWidget {
   static WidgetBuilder builder = (context) => const ChordsRoute();
@@ -10,28 +12,35 @@ class ChordsRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)?.settings.arguments is ChordRouteArguments) {
-      final arguments =
-          ModalRoute.of(context)?.settings.arguments as ChordRouteArguments;
+    final routeArgs = ModalRoute.of(context)?.settings.arguments;
+    if (routeArgs is ChordRouteArguments) {
       return Expanded(
-          child: Center(child: Text('chord ${arguments.chord.id()}')));
-    } else if (ModalRoute.of(context)?.settings.arguments
-        is ChordPairingRouteArguments) {
-      final arguments = ModalRoute.of(context)?.settings.arguments
-          as ChordPairingRouteArguments;
-      if (arguments.path != null) {
+          child:
+              Center(child: ThemeStyledText('chord ${routeArgs.chord.id()}')));
+    } else if (routeArgs is ChordPairingRouteArguments) {
+      if (routeArgs.path != null) {
         return Expanded(
             child: Center(
-                child: Text(
-                    'chords ${arguments.chord1.id()} and ${arguments.chord2.id()} ${arguments.path!.name}')));
+                child: ThemeStyledText(
+                    'chords ${routeArgs.chord1.id()} and ${routeArgs.chord2.id()} ${routeArgs.path!.name}')));
       } else {
         return Expanded(
             child: Center(
-                child: Text(
-                    'chords ${arguments.chord1.id()} and ${arguments.chord2.id()}')));
+                child: ThemeStyledText(
+                    'chords ${routeArgs.chord1.id()} and ${routeArgs.chord2.id()}')));
       }
     } else {
-      return const Expanded(child: Center(child: Text('chords')));
+      final tabContext = PickingTheme.of(context).tabContext();
+      return Expanded(
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        MeasureDisplay(BanjoRolls.forward,
+            instrument: Instrument.banjo, tabContext: tabContext),
+        ChordChartDisplay(
+            size: const Size(100, 125),
+            tabContext: tabContext,
+            chord: BanjoChords.c)
+      ]));
     }
   }
 }

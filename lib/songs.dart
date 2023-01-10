@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'theme.dart';
 import 'routes.dart';
 
 class SongsRoute extends StatelessWidget {
@@ -9,12 +10,12 @@ class SongsRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)?.settings.arguments is SongRouteArguments) {
-      final arguments =
-          ModalRoute.of(context)?.settings.arguments as SongRouteArguments;
-      return Expanded(child: Center(child: Text('song ${arguments.songId}')));
+    final routeArgs = ModalRoute.of(context)?.settings.arguments;
+    if (routeArgs is SongRouteArguments) {
+      return Expanded(
+          child: Center(child: ThemeStyledText('song ${routeArgs.songId}')));
     } else {
-      return const Expanded(child: Center(child: Text('songs')));
+      return const Expanded(child: Center(child: ThemeStyledText('songs')));
     }
   }
 }

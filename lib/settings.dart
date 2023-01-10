@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'theme.dart';
+
 class SettingsRoute extends StatelessWidget {
   static WidgetBuilder builder = (context) => const SettingsRoute();
 
@@ -7,6 +9,6 @@ class SettingsRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Expanded(child: Center(child: Text('settings')));
+    return const Expanded(child: Center(child: ThemeStyledText('settings')));
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'routes.dart';
+import 'theme.dart';
 
 class TechniquesRoute extends StatelessWidget {
   static WidgetBuilder builder = (context) => const TechniquesRoute();
@@ -9,21 +10,22 @@ class TechniquesRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (ModalRoute.of(context)?.settings.arguments is TechniqueRouteArguments) {
-      final arguments =
-          ModalRoute.of(context)?.settings.arguments as TechniqueRouteArguments;
-      if (arguments.path != null) {
+    final routeArgs = ModalRoute.of(context)?.settings.arguments;
+    if (routeArgs is TechniqueRouteArguments) {
+      if (routeArgs.path != null) {
         return Expanded(
             child: Center(
-                child: Text(
-                    'technique ${arguments.technique.name} ${arguments.path!.name}')));
+                child: ThemeStyledText(
+                    'technique ${routeArgs.technique.name} ${routeArgs.path!.name}')));
       } else {
         return Expanded(
-            child:
-                Center(child: Text('technique ${arguments.technique.name}')));
+            child: Center(
+                child:
+                    ThemeStyledText('technique ${routeArgs.technique.name}')));
       }
     } else {
-      return const Expanded(child: Center(child: Text('techniques')));
+      return const Expanded(
+          child: Center(child: ThemeStyledText('techniques')));
     }
   }
 }

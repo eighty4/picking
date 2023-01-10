@@ -177,9 +177,9 @@ class _BottomMenuState extends State<BottomMenu> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: const [
-          Text('more'),
-          Text('menu'),
-          Text('content'),
+          ThemeStyledText('more'),
+          ThemeStyledText('menu'),
+          ThemeStyledText('content'),
         ],
       ),
     );
@@ -216,7 +216,7 @@ class NavigationControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final navigationColor = PickingTheme.of(context).navigationColor;
+    final theme = PickingTheme.of(context);
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
@@ -225,8 +225,20 @@ class NavigationControl extends StatelessWidget {
           text: TextSpan(text: '', children: [
             WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
-                child: Icon(icon, size: 45, color: navigationColor)),
-            TextSpan(text: ' $text', style: DefaultTextStyle.of(context).style)
+                child: Icon(icon,
+                    size: 45,
+                    color: theme.navigationColor,
+                    shadows: [
+                      Shadow(
+                          color: theme.noteLabelColor,
+                          offset: const Offset(0, 1),
+                          blurRadius: 1)
+                    ])),
+            TextSpan(
+                text: ' $text',
+                style: DefaultTextStyle.of(context)
+                    .style
+                    .copyWith(color: theme.textColor))
           ]),
         ),
       ),
