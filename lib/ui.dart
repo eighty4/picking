@@ -72,7 +72,7 @@ class _UserInterfaceState extends State<UserInterface> {
                       menuOpen: open == ShiftingPosition.top,
                       onOpenMenuTap: _openTopMenu,
                       onCloseMenuTap: _closeOpenMenu),
-                  widget.child,
+                  Expanded(child: widget.child),
                   BottomControlsRow(
                       menuOpen: open == ShiftingPosition.bottom,
                       onOpenMenuTap: _openBottomMenu,
@@ -172,8 +172,10 @@ class BottomMenu extends StatefulWidget {
 class _BottomMenuState extends State<BottomMenu> {
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return SizedBox(
       height: BottomMenu.height,
+      width: size.width,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: const [

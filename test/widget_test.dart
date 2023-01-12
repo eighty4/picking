@@ -4,7 +4,7 @@ import 'package:picking/main.dart';
 
 void main() {
   testWidgets('Renders the app', (WidgetTester tester) async {
-    await tester.pumpWidget(PickingApp());
+    await tester.pumpWidget(const PickingApp());
     expect(find.byType(Scaffold), findsNWidgets(1));
   });
 }

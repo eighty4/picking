@@ -14,33 +14,27 @@ class ChordsRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     final routeArgs = ModalRoute.of(context)?.settings.arguments;
     if (routeArgs is ChordRouteArguments) {
-      return Expanded(
-          child:
-              Center(child: ThemeStyledText('chord ${routeArgs.chord.id()}')));
+      return Center(child: ThemeStyledText('chord ${routeArgs.chord.id()}'));
     } else if (routeArgs is ChordPairingRouteArguments) {
       if (routeArgs.path != null) {
-        return Expanded(
-            child: Center(
-                child: ThemeStyledText(
-                    'chords ${routeArgs.chord1.id()} and ${routeArgs.chord2.id()} ${routeArgs.path!.name}')));
+        return Center(
+            child: ThemeStyledText(
+                'chords ${routeArgs.chord1.id()} and ${routeArgs.chord2.id()} ${routeArgs.path!.name}'));
       } else {
-        return Expanded(
-            child: Center(
-                child: ThemeStyledText(
-                    'chords ${routeArgs.chord1.id()} and ${routeArgs.chord2.id()}')));
+        return Center(
+            child: ThemeStyledText(
+                'chords ${routeArgs.chord1.id()} and ${routeArgs.chord2.id()}'));
       }
     } else {
       final tabContext = PickingTheme.of(context).tabContext();
-      return Expanded(
-          child:
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+      return Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         MeasureDisplay(BanjoRolls.forward,
             instrument: Instrument.banjo, tabContext: tabContext),
         ChordChartDisplay(
             size: const Size(100, 125),
             tabContext: tabContext,
             chord: BanjoChords.c)
-      ]));
+      ]);
     }
   }
 }

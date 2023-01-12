@@ -12,10 +12,9 @@ class SongsRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     final routeArgs = ModalRoute.of(context)?.settings.arguments;
     if (routeArgs is SongRouteArguments) {
-      return Expanded(
-          child: Center(child: ThemeStyledText('song ${routeArgs.songId}')));
+      return Center(child: ThemeStyledText('song ${routeArgs.songId}'));
     } else {
-      return const Expanded(child: Center(child: ThemeStyledText('songs')));
+      return const Center(child: ThemeStyledText('songs'));
     }
   }
 }

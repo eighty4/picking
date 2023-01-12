@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'instrument.dart';
+import 'router.dart';
 import 'routes.dart';
 import 'theme.dart';
 
@@ -73,9 +74,7 @@ class _MenuNavLinkState extends State<MenuNavLink> {
           onExit: (event) => setState(() => hover = false),
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pushNamed(widget.path);
-              },
+              onTap: () => PickingRouter.navigator.pushNamed(widget.path),
               child: Container(
                   height: 50,
                   padding: widget.text == null

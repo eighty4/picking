@@ -1,9 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:picking/libtab/libtab.dart';
-
-import 'controller.dart';
-import 'theme.dart';
-import 'ui.dart';
 
 enum NavPath { pairings, root, songs }
 
@@ -163,43 +158,4 @@ class TechniqueRouteArguments {
   final NavPath? path;
 
   TechniqueRouteArguments(this.technique, [this.path]);
-}
-
-class PickingPageRoute extends MaterialPageRoute {
-  final PickingController pickingController;
-
-  PickingPageRoute(
-      {required this.pickingController,
-      required super.builder,
-      super.settings,
-      super.fullscreenDialog,
-      super.maintainState});
-
-  @override
-  Widget buildContent(BuildContext context) {
-    return PickingAppScreen(
-        controller: pickingController, child: builder(context));
-  }
-}
-
-class PickingAppScreen extends StatelessWidget {
-  final Widget child;
-  final PickingController controller;
-
-  const PickingAppScreen(
-      {super.key, required this.child, required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = PickingThemeData.darkBlue();
-    return PickingTheme(
-      theme: theme,
-      child: Scaffold(
-          backgroundColor: theme.backgroundColor,
-          body: SafeArea(
-              child: PickingControllerModel(
-                  controller: controller,
-                  child: UserInterface(controller: controller, child: child)))),
-    );
-  }
 }
