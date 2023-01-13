@@ -44,6 +44,7 @@ class PickingThemeData {
   TabContext tabContext() {
     return TabContext(
       chartColor: chartColor,
+      labelColor: textColor,
       noteLabelColor: noteLabelColor,
       noteShapeColor: noteColor,
     );

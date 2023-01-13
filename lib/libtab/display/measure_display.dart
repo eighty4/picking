@@ -30,8 +30,10 @@ class MeasureDisplay extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 25),
           child: Text(label!,
-              style:
-                  const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+              style: TextStyle(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: tabContext.labelColor)),
         ),
         buildMeasure()
       ],
