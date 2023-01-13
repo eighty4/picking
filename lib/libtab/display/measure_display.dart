@@ -174,7 +174,8 @@ class MeasureNotePainter extends CustomPainter {
   final TabContext tabContext;
   final Measure measure;
   final Paint noteLabelPaint;
-  final Paint noteShapePaint;
+  final Paint noteFillPaint;
+  final Paint noteStrokePaint;
   final ChartPositioning chartPositioning;
   final NotePositioning notePositioning;
 
@@ -184,7 +185,8 @@ class MeasureNotePainter extends CustomPainter {
       required this.chartPositioning,
       required this.notePositioning})
       : noteLabelPaint = tabContext.noteLabelPaint(PaintingStyle.stroke),
-        noteShapePaint = tabContext.noteShapePaint(PaintingStyle.fill);
+        noteFillPaint = tabContext.noteShapePaint(PaintingStyle.fill),
+        noteStrokePaint = tabContext.noteShapePaint(PaintingStyle.stroke);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -213,7 +215,7 @@ class MeasureNotePainter extends CustomPainter {
     // todo dynamic size and position
     final path = Path()..addOval(Rect.fromCircle(center: offset, radius: 12));
     canvas.drawShadow(path, tabContext.noteLabelColor, 6, false);
-    canvas.drawPath(path, noteShapePaint);
+    canvas.drawPath(path, noteFillPaint);
 
     final textStyle = TextStyle(color: tabContext.noteLabelColor, fontSize: 22);
     final textSpan = TextSpan(text: note.fret.toString(), style: textStyle);
@@ -243,7 +245,7 @@ class MeasureNotePainter extends CustomPainter {
     final path = Path()
       ..moveTo(xFrom, y)
       ..quadraticBezierTo(xControl, yControl, xTo, y);
-    canvas.drawPath(path, noteShapePaint);
+    canvas.drawPath(path, noteStrokePaint);
   }
 
   void paintPullLine(
@@ -256,7 +258,7 @@ class MeasureNotePainter extends CustomPainter {
     final path = Path()
       ..moveTo(xFrom, y)
       ..quadraticBezierTo(xControl, yControl, xTo, y);
-    canvas.drawPath(path, noteShapePaint);
+    canvas.drawPath(path, noteStrokePaint);
   }
 
   void paintSlideLine(
@@ -265,7 +267,7 @@ class MeasureNotePainter extends CustomPainter {
     final path = Path()
       ..moveTo(noteOffset.dx + 8, y)
       ..lineTo(releaseOffset.dx - 8, y);
-    canvas.drawPath(path, noteShapePaint);
+    canvas.drawPath(path, noteStrokePaint);
   }
 
   @override
