@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:picking/libtab/libtab.dart';
 
+/// Container and calculator of [Canvas] spacing values for strings and notes
 class ChartPositioning {
   final double sixteenthSpacing;
   final double eighthSpacing;
@@ -29,22 +30,14 @@ class ChartPositioning {
     );
   }
 
-  Offset position(Note note) =>
-      Offset(xPosition(note), yPosition(note));
+  Offset position(Note note) => Offset(xPosition(note), yPosition(note));
 
   double xPosition(Note note) =>
-      note.timing.nth * noteSpacingFromNoteType(note.timing.type);
+      note.timing.nth * noteSpacing(note.timing.type);
 
   double yPosition(Note note) => (note.string - 1) * stringSpacing;
 
-  Offset releaseNotePosition(Offset offset, Note note) {
-    final translateX = note.length != null
-        ? note.length!.nth * noteSpacingFromNoteType(note.length!.type)
-        : noteSpacingFromNoteType(note.timing.type);
-    return offset.translate(translateX, 0);
-  }
-
-  double noteSpacingFromNoteType(NoteType noteType) {
+  double noteSpacing(NoteType noteType) {
     switch (noteType) {
       case NoteType.whole:
         return 1;

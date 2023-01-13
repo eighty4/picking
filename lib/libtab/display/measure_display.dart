@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:picking/libtab/libtab.dart';
 
+import 'note_positioning.dart';
+
 class MeasureDisplay extends StatelessWidget {
   static const defaultSize = Size(300, 200);
   final TabContext tabContext;
@@ -38,6 +40,8 @@ class MeasureDisplay extends StatelessWidget {
 
   Container buildMeasure() {
     final chartPositioning = ChartPositioning.calculate(size, instrument);
+    final notePositioning =
+        NotePositioning.calculate(measure.notes, chartPositioning);
     final chartPaint = CustomPaint(
         size: size,
         painter: MeasureChartPainter(
@@ -51,7 +55,8 @@ class MeasureDisplay extends StatelessWidget {
         painter: MeasureNotePainter(
             tabContext: tabContext,
             measure: measure,
-            chartPositioning: chartPositioning));
+            chartPositioning: chartPositioning,
+            notePositioning: notePositioning));
     final List<Widget> children = [chartPaint, notesPaint];
     return Container(
         color: tabContext.backgroundColor,
@@ -169,58 +174,42 @@ class MeasureNotePainter extends CustomPainter {
   final Paint noteLabelPaint;
   final Paint noteShapePaint;
   final ChartPositioning chartPositioning;
+  final NotePositioning notePositioning;
 
   MeasureNotePainter(
       {required this.tabContext,
       required this.measure,
-      required this.chartPositioning})
+      required this.chartPositioning,
+      required this.notePositioning})
       : noteLabelPaint = tabContext.noteLabelPaint(PaintingStyle.stroke),
         noteShapePaint = tabContext.noteShapePaint(PaintingStyle.fill);
 
   @override
   void paint(Canvas canvas, Size size) {
-    for (final note in measure.notes) {
-      final offset = chartPositioning.position(note);
-      paintNote(canvas, size, note, offset);
-
-      if (note.slideTo != null) {
-        final releaseOffset =
-            chartPositioning.releaseNotePosition(offset, note);
-        paintSlideLine(canvas, size, offset, releaseOffset);
-        paintNote(
-            canvas, size, Note(note.string, note.slideTo!), releaseOffset);
+    notePositioning.notes.forEach((sixteenthNth, notes) {
+      for (var positioning in notes) {
+        paintNote(canvas, size, positioning.note, positioning.offset);
       }
+    });
 
-      if (note.hammerOn != null) {
-        final releaseOffset =
-            chartPositioning.releaseNotePosition(offset, note);
-        paintHammerLine(canvas, size, offset, releaseOffset);
-        paintNote(
-            canvas, size, Note(note.string, note.hammerOn!), releaseOffset);
-      }
-
-      if (note.pullOff != null) {
-        final releaseOffset =
-            chartPositioning.releaseNotePosition(offset, note);
-        paintPullLine(canvas, size, offset, releaseOffset);
-        paintNote(
-            canvas, size, Note(note.string, note.pullOff!), releaseOffset);
-      }
-
-      if (note.and != null) {
-        for (var and = note.and; and != null;) {
-          paintNote(canvas, size, and,
-              Offset(offset.dx, chartPositioning.yPosition(and)));
-          and = and.and;
-        }
+    for (var positioning in notePositioning.techniques) {
+      switch (positioning.technique) {
+        case Technique.hammerOn:
+          paintHammerLine(canvas, size, positioning.from, positioning.to);
+          break;
+        case Technique.pullOff:
+          paintPullLine(canvas, size, positioning.from, positioning.to);
+          break;
+        case Technique.slide:
+          paintSlideLine(canvas, size, positioning.from, positioning.to);
+          break;
       }
     }
   }
 
   void paintNote(Canvas canvas, Size size, Note note, Offset offset) {
     // todo dynamic size and position
-    final path = Path()
-      ..addOval(Rect.fromCircle(center: offset, radius: 12));
+    final path = Path()..addOval(Rect.fromCircle(center: offset, radius: 12));
     canvas.drawShadow(path, tabContext.noteLabelColor, 6, false);
     canvas.drawPath(path, noteShapePaint);
 

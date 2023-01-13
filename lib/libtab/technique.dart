@@ -1,3 +1,1 @@
-enum Technique {
-  hammerOn, pullOff, slide
-}
+enum Technique { hammerOn, pullOff, slide }

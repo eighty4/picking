@@ -6,6 +6,7 @@ enum Finger { t, m, i }
 enum NoteType { whole, half, quarter, eighth, sixteenth }
 
 extension NotesPerMeasureFn on NoteType {
+  /// How many notes this note type is played in a measure
   int notesPerMeasure() {
     switch (this) {
       case NoteType.whole:
@@ -20,10 +21,17 @@ extension NotesPerMeasureFn on NoteType {
         return 16;
     }
   }
+
+  /// How many sixteenth notes a beat lasts for this note type
+  int toSixteenthNotesPerBeat() {
+    return (16 / notesPerMeasure()).round();
+  }
 }
 
 class Timing {
-  /// type of note
+  static const Timing unspecified = Timing(NoteType.eighth, -1);
+
+  /// Type of note
   final NoteType type;
 
   /// 1-indexed placement in measure
@@ -31,11 +39,14 @@ class Timing {
 
   const Timing(this.type, this.nth);
 
+  /// Create a [Timing] for a [Note] using [Timing.unspecified] based on the
+  /// index of the [Note] in a [List]
   factory Timing.withinNoteList(
       {required int listLength, required int noteIndex}) {
     return Timing(notesPerMeasureToNoteType(listLength), noteIndex + 1);
   }
 
+  /// Resolves [NoteType] based on the number of [Note]s in a measure
   static NoteType notesPerMeasureToNoteType(int noteCount) {
     switch (noteCount) {
       case 16:
@@ -56,6 +67,28 @@ class Timing {
         }
     }
   }
+
+  Timing operator +(Timing timing) => add(timing);
+
+  Timing add(Timing timing) {
+    if (type == timing.type) {
+      return Timing(type, nth + timing.nth);
+    } else {
+      final sixteenthNth = toSixteenthNth() + timing.toSixteenthNth();
+      assert(sixteenthNth < 17);
+      return Timing(NoteType.sixteenth, sixteenthNth);
+    }
+  }
+
+  /// Resolves the [Timing.nth] value as a [NoteType.sixteenth] note
+  int toSixteenthNth() {
+    return nth == 1 ? 1 : type.toSixteenthNotesPerBeat() * nth - 1;
+  }
+
+  @override
+  String toString() {
+    return 'Timing{type: $type, nth: $nth}';
+  }
 }
 
 class Note {
@@ -65,36 +98,36 @@ class Note {
   /// 1-indexed fret
   final int fret;
 
-  /// whether melody note
+  /// Whether melody note
   final bool melody;
 
-  /// time to play note
+  /// Time to play note
   final Timing timing;
 
-  /// length of note
+  /// Length of note
   final Timing? length;
 
-  /// chord composed by notes
+  /// Chord composed by notes
   final Chord? chord;
 
-  /// hammer on fret
+  /// Hammer on fret
   final int? hammerOn;
 
-  /// pull off fret
+  /// Pull off fret
   final int? pullOff;
 
-  /// slide to fret
+  /// Slide to fret
   final int? slideTo;
 
-  /// which finger plays note
+  /// Which finger plays note
   final Finger? pick;
 
-  /// additional notes played in tandem
+  /// Additional notes played in tandem
   final Note? and;
 
   Note(this.string, this.fret,
       {this.melody = false,
-      this.timing = const Timing(NoteType.eighth, -1),
+      this.timing = Timing.unspecified,
       this.length,
       this.chord,
       this.hammerOn,
@@ -122,6 +155,10 @@ class Note {
       pullOff: pullOff,
       and: and,
     );
+  }
+
+  Timing sustainReleaseTiming() {
+    return timing + (length ?? Timing(timing.type, timing.nth + 1));
   }
 }
 
