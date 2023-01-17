@@ -74,8 +74,7 @@ class _InstrumentSelectionState extends State<InstrumentSelection> {
             curve: Curves.decelerate,
             scale: focus ? 1.1 : 0,
             duration: const Duration(milliseconds: 150),
-            child: SizedBox.square(
-                dimension: widget.height, child: CloudSvg()),
+            child: SizedBox.square(dimension: widget.height, child: CloudSvg()),
           )),
       MouseRegion(
           cursor: SystemMouseCursors.click,

@@ -18,3 +18,5 @@ jobs:
       - run: flutter analyze
       - run: flutter test
         if: success() || failure()
+      - run: flutter format lib --set-exit-if-changed
+        if: success() || failure()
