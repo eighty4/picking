@@ -1,42 +1,41 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-class MetronomeConfig {
-  final int bpm;
+class PickingController {
+  final NavMenuController _navMenuController = NavMenuController();
 
-  MetronomeConfig({required this.bpm});
-}
+  PickingController();
 
-enum ProgressSkip { next, previous }
-
-class ControllerEvent {
-  final ProgressSkip? skip;
-  final MetronomeConfig? metronome;
-
-  ControllerEvent({this.skip, this.metronome});
-
-  factory ControllerEvent.next() => ControllerEvent(skip: ProgressSkip.next);
-
-  factory ControllerEvent.previous() =>
-      ControllerEvent(skip: ProgressSkip.previous);
-}
-
-class PickingController extends ChangeNotifier
-    implements ValueListenable<ControllerEvent?> {
-  ControllerEvent event = ControllerEvent(skip: null, metronome: null);
-
-  void next() {
-    event = ControllerEvent.next();
-    notifyListeners();
+  void dispose() {
+    _navMenuController.dispose();
   }
 
-  void previous() {
-    event = ControllerEvent.previous();
+  NavMenuController get navMenu => _navMenuController;
+}
+
+class NavMenuController extends ChangeNotifier
+    implements ValueListenable<bool> {
+  bool open = false;
+
+  void openMenu() {
+    if (!open) {
+      toggleMenu();
+    }
+  }
+
+  void closeMenu() {
+    if (open) {
+      toggleMenu();
+    }
+  }
+
+  void toggleMenu() {
+    open = !open;
     notifyListeners();
   }
 
   @override
-  ControllerEvent? get value => event;
+  bool get value => open;
 }
 
 class PickingControllerModel extends InheritedWidget {

@@ -6,15 +6,16 @@ import 'theme.dart';
 import 'ui.dart';
 
 void main() {
-  runApp(const PickingApp());
+  runApp(PickingApp());
 }
 
 class PickingApp extends StatelessWidget {
-  const PickingApp({super.key});
+  final controller = PickingController();
+
+  PickingApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = PickingController();
     final theme = PickingThemeData.darkBlue();
     return MaterialApp(
         theme: ThemeData.light(useMaterial3: true),
