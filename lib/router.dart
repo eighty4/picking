@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'chords.dart';
 import 'launch.dart';
 import 'routes.dart';
-import 'settings.dart';
 import 'songs.dart';
 import 'techniques.dart';
 
@@ -37,9 +36,6 @@ class PickingRouter extends StatelessWidget {
         break;
       case PickingRoutes.chords:
         builder = ChordsRoute.builder;
-        break;
-      case PickingRoutes.settings:
-        builder = SettingsRoute.builder;
         break;
       case PickingRoutes.songs:
         builder = SongsRoute.builder;

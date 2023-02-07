@@ -15,8 +15,6 @@ class PickingRoutes {
 
   static const chordById = '/chord';
 
-  static const settings = '/settings';
-
   static const songs = '/songs';
 
   static const songById = '/song';
