@@ -8,7 +8,7 @@ import 'theme.dart';
 
 class UserInterface extends StatefulWidget {
   static const Duration navMenuToggleDuration = Duration(milliseconds: 125);
-  final PickingController controller;
+  final PickingControllerApi controller;
   final Widget child;
 
   const UserInterface(

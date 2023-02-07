@@ -10,7 +10,7 @@ void main() {
 }
 
 class PickingApp extends StatelessWidget {
-  final controller = PickingController();
+  final controller = PickingControllerApi();
 
   PickingApp({super.key});
 
@@ -25,7 +25,7 @@ class PickingApp extends StatelessWidget {
             child: Scaffold(
                 backgroundColor: theme.backgroundColor,
                 body: SafeArea(
-                    child: PickingControllerModel(
+                    child: PickingController(
                         controller: controller,
                         child: UserInterface(
                             controller: controller,

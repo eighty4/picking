@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
-class PickingController {
+class PickingControllerApi {
   final NavMenuController _navMenuController = NavMenuController();
 
-  PickingController();
+  PickingControllerApi();
 
   void dispose() {
     _navMenuController.dispose();
@@ -38,23 +38,23 @@ class NavMenuController extends ChangeNotifier
   bool get value => open;
 }
 
-class PickingControllerModel extends InheritedWidget {
-  final PickingController controller;
+class PickingController extends InheritedWidget {
+  final PickingControllerApi controller;
 
-  const PickingControllerModel(
+  const PickingController(
       {super.key, required super.child, required this.controller});
 
-  static PickingController of(BuildContext context) {
+  static PickingControllerApi of(BuildContext context) {
     final result =
-        context.dependOnInheritedWidgetOfExactType<PickingControllerModel>();
-    assert(result != null, 'No PickingControllerModel found in context');
+        context.dependOnInheritedWidgetOfExactType<PickingController>();
+    assert(result != null, 'No PickingController found in context');
     return result!.controller;
   }
 
   @override
-  bool updateShouldNotify(PickingControllerModel oldWidget) {
+  bool updateShouldNotify(PickingController oldWidget) {
     if (kDebugMode) {
-      print('PickingControllerModel update');
+      print('PickingController update');
     }
     return true;
   }
