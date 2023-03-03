@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:picking/libtab/libtab.dart';
+import 'package:libtab/libtab.dart';
 
 class BanjoRolls {
   static final Map<String, Measure> byLabel = {

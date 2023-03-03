@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:picking/libtab/libtab.dart';
+import 'package:libtab/libtab.dart';
 
 class PickingThemeData {
   final Color backgroundColor;

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'controller.dart';
 import 'router.dart';
 import 'theme.dart';

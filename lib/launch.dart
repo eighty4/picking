@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'data.dart';
 import 'instrument.dart';
 import 'routes.dart';
@@ -19,13 +18,14 @@ class _LaunchRouteState extends State<LaunchRoute> {
   @override
   void initState() {
     super.initState();
-    PickingAppData.instrument().then((instrument) {
-      if (mounted) {
-        if (instrument == null) {
-          setState(() => waiting = false);
-        } else {
-          Navigator.of(context).pushNamed(PickingRoutes.chords);
-        }
+    PickingAppData.launchData().then((launchData) {
+      if (!mounted) {
+        return;
+      }
+      if (launchData.instrument == null) {
+        setState(() => waiting = false);
+      } else {
+        Navigator.of(context).pushNamed(PickingRoutes.chords);
       }
     });
   }

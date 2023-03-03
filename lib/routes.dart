@@ -1,4 +1,4 @@
-import 'package:picking/libtab/libtab.dart';
+import 'package:libtab/libtab.dart';
 
 enum NavPath { pairings, root, songs }
 

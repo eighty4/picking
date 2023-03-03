@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
   flutter_svg: 1.1.6
   google_fonts: 3.0.1
+  libtab:
+    path: "../libtab"
   shared_preferences: 2.0.16
 
 dev_dependencies:

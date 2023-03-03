@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:picking/libtab/libtab.dart';
-
+import 'package:libtab/libtab.dart';
 import 'banjo.dart';
 import 'routes.dart';
 import 'theme.dart';

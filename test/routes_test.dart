@@ -1,6 +1,6 @@
-import 'package:picking/libtab/libtab.dart';
-import 'package:picking/routes.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:libtab/libtab.dart';
+import 'package:picking/routes.dart';
 
 void main() {
   test('PickingRoutes.chord', () {
