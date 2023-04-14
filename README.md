@@ -18,16 +18,6 @@ flutter pub get
 flutter run
 ```
 
-### libtab dependency
-
-Picking depends on a Flutter library that should be cloned into your workspace. 
-
-```bash
-git clone https://github.com/eighty4/libtab
-```
-
-After cloning the repo, make sure the relative path to `libtab` is correct in [pubspec.yaml](pubspec.yaml).
-
 ### Platforms
 
 This repository currently only has `macos` and `android` for development platforms. `flutter create` will create runnable projects for `web`, `ios`, `linux` and `windows` if necessary:
