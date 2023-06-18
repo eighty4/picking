@@ -7,12 +7,12 @@ export 'package:libtab/instrument.dart';
 
 extension IconFn on Instrument {
   SvgPicture svg() {
-    switch (this) {
-      case Instrument.banjo:
-        return SvgPicture.asset('assets/Banjo.svg', semanticsLabel: 'Banjo');
-      case Instrument.guitar:
-        return SvgPicture.asset('assets/Guitar.svg', semanticsLabel: 'Guitar');
-    }
+    return switch (this) {
+      Instrument.banjo =>
+        SvgPicture.asset('assets/Banjo.svg', semanticsLabel: 'Banjo'),
+      Instrument.guitar =>
+        SvgPicture.asset('assets/Guitar.svg', semanticsLabel: 'Guitar'),
+    };
   }
 }
 

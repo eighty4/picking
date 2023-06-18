@@ -19,13 +19,12 @@ class PickingAppData {
   }
 
   static Future<Instrument?> instrument() async {
-    switch ((await _prefs).getString(instrumentKey)) {
-      case 'banjo':
-        return Instrument.banjo;
-      case 'guitar':
-        return Instrument.guitar;
+    final instrument = (await _prefs).getString(instrumentKey);
+    if (instrument == null) {
+      return null;
+    } else {
+      return Instrument.values.byName(instrument);
     }
-    return null;
   }
 
   static void saveInstrument(Instrument instrument) {
