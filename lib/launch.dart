@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'data.dart';
 import 'instrument.dart';
-import 'routes.dart';
+import 'routing.dart';
 
 class LaunchRoute extends StatefulWidget {
   static WidgetBuilder builder = (context) => const LaunchRoute();
@@ -25,7 +26,7 @@ class _LaunchRouteState extends State<LaunchRoute> {
       if (launchData.instrument == null) {
         setState(() => waiting = false);
       } else {
-        Navigator.of(context).pushNamed(PickingRoutes.chords);
+        context.playChords();
       }
     });
   }
@@ -37,16 +38,14 @@ class _LaunchRouteState extends State<LaunchRoute> {
     } else {
       final size = MediaQuery.of(context).size;
       final instrumentHeight = MediaQuery.of(context).size.height * .4;
-      return Expanded(
-        child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              InstrumentSelection(Instrument.banjo, height: instrumentHeight),
-              SizedBox(width: size.height * .1),
-              InstrumentSelection(Instrument.guitar, height: instrumentHeight),
-            ]),
-      );
+      return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            InstrumentSelection(Instrument.banjo, height: instrumentHeight),
+            SizedBox(width: size.height * .1),
+            InstrumentSelection(Instrument.guitar, height: instrumentHeight),
+          ]);
     }
   }
 }
@@ -83,7 +82,7 @@ class _InstrumentSelectionState extends State<InstrumentSelection> {
           child: GestureDetector(
               onTap: () {
                 PickingAppData.saveInstrument(widget.instrument);
-                Navigator.of(context).pushNamed(PickingRoutes.chords);
+                context.playChords();
               },
               child: InstrumentIcon(widget.instrument, height: widget.height))),
     ]);

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'controller.dart';
 import 'instrument.dart';
-import 'router.dart';
-import 'routes.dart';
+import 'routing.dart';
 import 'theme.dart';
 
 class UserInterface extends StatefulWidget {
@@ -63,15 +63,15 @@ class NavMenu extends StatefulWidget {
 class _NavMenuState extends State<NavMenu> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return const SizedBox(
       height: NavMenu.height,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: const [
-          MenuNavLink(text: 'Chords', path: PickingRoutes.chords),
-          MenuNavLink(text: 'Techniques', path: PickingRoutes.techniques),
-          MenuNavLink(text: 'Songs', path: PickingRoutes.songs),
+        children: [
+          MenuNavLink(text: 'Chords', path: PickingRoutes.playChords),
+          MenuNavLink(text: 'Techniques', path: PickingRoutes.playChords),
+          MenuNavLink(text: 'Songs', path: PickingRoutes.playChords),
           // MenuNavLink(icon: Icons.settings, path: PickingRoutes.settings),
         ],
       ),
@@ -120,7 +120,7 @@ class _MenuNavLinkState extends State<MenuNavLink> {
           onExit: (event) => setState(() => hover = false),
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
-              onTap: () => PickingRouter.navigator.pushNamed(widget.path),
+              onTap: () => context.navTo(widget.path),
               child: Container(
                   height: 50,
                   padding: widget.text == null

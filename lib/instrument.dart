@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:libtab/instrument.dart';
+
 export 'package:libtab/instrument.dart';
 
 extension IconFn on Instrument {
