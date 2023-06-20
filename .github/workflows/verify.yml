@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  flutter-version: 3.10.5
+
+jobs:
+  verified:
+    runs-on: ubuntu-22.04
+    needs:
+      - analyze
+      - format
+      - build-web
+      - test
+    steps:
+      - run: echo "And the green grass grew all around"
+
+  analyze:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.flutter-version }}
+          channel: 'stable'
+      - name: analyze
+        run: flutter analyze
+
+  format:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.flutter-version }}
+          channel: 'stable'
+      - name: format
+        run: dart format lib test --set-exit-if-changed
+
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.flutter-version }}
+          channel: 'stable'
+      - name: test
+        run: flutter test
+
+  build-web:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.flutter-version }}
+          channel: 'stable'
+      - name: build web
+        run: flutter build web
