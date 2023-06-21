@@ -1,3 +1,5 @@
+[![CI](https://img.shields.io/github/actions/workflow/status/eighty4/picking/verify.yml)](https://github.com/eighty4/picking/actions/workflows/verify.yml)
+
 # Picking
 
 Pickin' with Banjo and Guitar!
