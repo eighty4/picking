@@ -5,8 +5,6 @@ import 'banjo.dart';
 import 'theme.dart';
 
 class ChordsRoute extends StatelessWidget {
-  static WidgetBuilder builder = (context) => const ChordsRoute();
-
   const ChordsRoute({super.key});
 
   @override

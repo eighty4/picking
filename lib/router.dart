@@ -37,7 +37,7 @@ RouterConfig<Object> buildRouter(PickingControllerApi controller) {
               GoRoute(
                 path: PickingRoutes.playChords,
                 builder: (context, state) {
-                  return ChordsRoute.builder(context);
+                  return const ChordsRoute();
                 },
               ),
             ])

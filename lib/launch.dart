@@ -5,8 +5,6 @@ import 'instrument.dart';
 import 'routing.dart';
 
 class LaunchRoute extends StatefulWidget {
-  static WidgetBuilder builder = (context) => const LaunchRoute();
-
   const LaunchRoute({super.key});
 
   @override
