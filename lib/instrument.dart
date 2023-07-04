@@ -1,7 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:libtab/instrument.dart';
+
+import 'data.dart';
+import 'routing.dart';
 
 export 'package:libtab/instrument.dart';
 
@@ -57,10 +60,43 @@ class InstrumentModel extends InheritedWidget {
 
   @override
   bool updateShouldNotify(InstrumentModel oldWidget) {
-    if (kDebugMode) {
-      print(
-          'InstrumentModel update from ${oldWidget.instrument} to $instrument');
+    return oldWidget.instrument != instrument;
+  }
+}
+
+class InitializeInstrumentModel extends StatefulWidget {
+  final Widget child;
+
+  const InitializeInstrumentModel({super.key, required this.child});
+
+  @override
+  State<InitializeInstrumentModel> createState() =>
+      _InitializeInstrumentModelState();
+}
+
+class _InitializeInstrumentModelState extends State<InitializeInstrumentModel> {
+  Instrument? instrument;
+
+  @override
+  void initState() {
+    super.initState();
+    PickingAppData.instrument().then((value) {
+      if (value == null) {
+        context.go(PickingRoutes.launch);
+      } else {
+        setState(() {
+          instrument = value;
+        });
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (instrument == null) {
+      return const SizedBox.shrink();
+    } else {
+      return InstrumentModel(instrument: instrument!, child: widget.child);
     }
-    return true;
   }
 }

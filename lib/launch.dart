@@ -24,7 +24,7 @@ class _LaunchRouteState extends State<LaunchRoute> {
       if (launchData.instrument == null) {
         setState(() => waiting = false);
       } else {
-        context.playChords();
+        context.browseChords();
       }
     });
   }
@@ -80,7 +80,7 @@ class _InstrumentSelectionState extends State<InstrumentSelection> {
           child: GestureDetector(
               onTap: () {
                 PickingAppData.saveInstrument(widget.instrument);
-                context.playChords();
+                context.browseChords();
               },
               child: InstrumentIcon(widget.instrument, height: widget.height))),
     ]);

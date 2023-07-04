@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:libtab/libtab.dart';
 
@@ -64,10 +63,7 @@ class PickingTheme extends InheritedWidget {
 
   @override
   bool updateShouldNotify(PickingTheme oldWidget) {
-    if (kDebugMode) {
-      print('PickingTheme update from ${oldWidget.theme} to $theme');
-    }
-    return true;
+    return oldWidget.theme != theme;
   }
 }
 

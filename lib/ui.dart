@@ -69,9 +69,9 @@ class _NavMenuState extends State<NavMenu> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          MenuNavLink(text: 'Chords', path: PickingRoutes.playChords),
-          MenuNavLink(text: 'Techniques', path: PickingRoutes.playChords),
-          MenuNavLink(text: 'Songs', path: PickingRoutes.playChords),
+          MenuNavLink(text: 'Chords', path: PickingRoutes.browseChords),
+          MenuNavLink(text: 'Techniques', path: PickingRoutes.browseChords),
+          MenuNavLink(text: 'Songs', path: PickingRoutes.browseChords),
           // MenuNavLink(icon: Icons.settings, path: PickingRoutes.settings),
         ],
       ),
