@@ -23,11 +23,15 @@ class _ChordsMenuRouteState extends State<ChordsMenuRoute> {
         (instrument == Instrument.banjo ? banjoChordNotes : guitarChordNotes)
             .keys
             .toList(growable: false);
+    navToFocusedChord() {
+      if (focused > -1) {
+        context.playChord(chords[focused]);
+      }
+    }
+
     return CallbackShortcuts(
       bindings: <LogicalKeySet, VoidCallback>{
-        LogicalKeySet(LogicalKeyboardKey.enter): () {
-          context.playChord(chords[focused]);
-        },
+        LogicalKeySet(LogicalKeyboardKey.enter): navToFocusedChord,
       },
       child: FocusScope(
         autofocus: true,
@@ -39,26 +43,33 @@ class _ChordsMenuRouteState extends State<ChordsMenuRoute> {
               crossAxisCount: 4,
             ),
             itemBuilder: (context, i) {
-              return Focus(
-                onFocusChange: (focused) {
-                  if (focused) {
-                    setState(() {
-                      this.focused = i;
-                    });
-                  }
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          color: focused == i
-                              ? Colors.red
-                              : Colors.transparent)),
-                  child: ChordWithLabel(chord: chords[i]),
+              return MouseRegion(
+                cursor: SystemMouseCursors.click,
+                onEnter: (event) => setFocusedIndex(i),
+                child: GestureDetector(
+                  onTap: navToFocusedChord,
+                  child: Focus(
+                    onFocusChange: (focused) => setFocusedIndex(i),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: focused == i
+                                  ? Colors.red
+                                  : Colors.transparent)),
+                      child: ChordWithLabel(chord: chords[i]),
+                    ),
+                  ),
                 ),
               );
             }),
       ),
     );
+  }
+
+  setFocusedIndex(int index) {
+    setState(() {
+      focused = index;
+    });
   }
 }
 
