@@ -18,7 +18,6 @@ class _ChordsMenuRouteState extends State<ChordsMenuRoute> {
 
   @override
   Widget build(BuildContext context) {
-    final tabContext = PickingTheme.of(context).tabContext();
     final instrument = InstrumentModel.of(context);
     final chords =
         (instrument == Instrument.banjo ? banjoChordNotes : guitarChordNotes)
@@ -51,21 +50,10 @@ class _ChordsMenuRouteState extends State<ChordsMenuRoute> {
                 child: Container(
                   decoration: BoxDecoration(
                       border: Border.all(
-                          color:
-                              focused == i ? Colors.red : Colors.transparent)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ChordChartDisplay(
-                          size: const Size(80, 100),
-                          tabContext: tabContext,
-                          chord: ChordNoteSet(instrument, chords[i])),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(chords[i].id()),
-                      ),
-                    ],
-                  ),
+                          color: focused == i
+                              ? Colors.red
+                              : Colors.transparent)),
+                  child: ChordWithLabel(chord: chords[i]),
                 ),
               );
             }),
@@ -81,17 +69,31 @@ class PlayChordRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ChordWithLabel(chord: chord);
+  }
+}
+
+class ChordWithLabel extends StatelessWidget {
+  final Chord chord;
+
+  const ChordWithLabel({super.key, required this.chord});
+
+  @override
+  Widget build(BuildContext context) {
     final tabContext = PickingTheme.of(context).tabContext();
     final instrument = InstrumentModel.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ChordChartDisplay(
-            size: const Size(80, 100),
-            tabContext: tabContext,
-            chord: ChordNoteSet(instrument, chord)),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(top: 11),
+          child: ChordChartDisplay(
+              size: const Size(80, 100),
+              tabContext: tabContext,
+              chord: ChordNoteSet(instrument, chord)),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(top: 11),
           child: Text(chord.id()),
         ),
       ],
