@@ -53,9 +53,6 @@ class PickingController extends InheritedWidget {
 
   @override
   bool updateShouldNotify(PickingController oldWidget) {
-    if (kDebugMode) {
-      print('PickingController update');
-    }
-    return true;
+    return false;
   }
 }
