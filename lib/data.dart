@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:libtab/instrument.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +14,9 @@ class PickingAppData {
       SharedPreferences.getInstance();
 
   static Future<PickingLaunchData> launchData() async {
+    if (kDebugMode) {
+      await (await _prefs).remove(instrumentKey);
+    }
     final fetchingInstrument = PickingAppData.instrument();
     final instrument = await fetchingInstrument;
     return PickingLaunchData(instrument);
