@@ -98,17 +98,12 @@ class ChordWithLabel extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 11),
-          child: ChordChartDisplay(
-              size: const Size(80, 100),
-              tabContext: tabContext,
-              chord: ChordNoteSet(instrument, chord)),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: 11),
-          child: Text(chord.id()),
-        ),
+        ChordChartDisplay(
+            size: const Size(80, 100),
+            tabContext: tabContext,
+            chord: ChordNoteSet(instrument, chord)),
+        const SizedBox(height: 10),
+        Text(chord.id()),
       ],
     );
   }
