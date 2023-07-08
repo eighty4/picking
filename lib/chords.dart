@@ -4,6 +4,7 @@ import 'package:libtab/libtab.dart';
 
 import 'instrument.dart';
 import 'routing.dart';
+import 'screen.dart';
 import 'theme.dart';
 
 class ChordsMenuRoute extends StatefulWidget {
@@ -29,7 +30,8 @@ class _ChordsMenuRouteState extends State<ChordsMenuRoute> {
       }
     }
 
-    return CallbackShortcuts(
+    return PickingScreen(
+        child: CallbackShortcuts(
       bindings: <LogicalKeySet, VoidCallback>{
         LogicalKeySet(LogicalKeyboardKey.enter): navToFocusedChord,
       },
@@ -63,7 +65,7 @@ class _ChordsMenuRouteState extends State<ChordsMenuRoute> {
               );
             }),
       ),
-    );
+    ));
   }
 
   setFocusedIndex(int index) {
@@ -80,7 +82,7 @@ class PlayChordRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChordWithLabel(chord: chord);
+    return PickingScreen(child: ChordWithLabel(chord: chord));
   }
 }
 

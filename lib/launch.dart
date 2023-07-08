@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'data.dart';
 import 'instrument.dart';
 import 'routing.dart';
+import 'screen.dart';
 
 class LaunchRoute extends StatefulWidget {
   const LaunchRoute({super.key});
@@ -31,12 +32,13 @@ class _LaunchRouteState extends State<LaunchRoute> {
 
   @override
   Widget build(BuildContext context) {
+    late final Widget content;
     if (waiting) {
-      return const SizedBox(height: 3);
+      content = const SizedBox(height: 3);
     } else {
       final size = MediaQuery.of(context).size;
       final instrumentHeight = MediaQuery.of(context).size.height * .4;
-      return Row(
+      content = Row(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -45,6 +47,7 @@ class _LaunchRouteState extends State<LaunchRoute> {
             InstrumentSelection(Instrument.guitar, height: instrumentHeight),
           ]);
     }
+    return PickingScreen(child: content);
   }
 }
 

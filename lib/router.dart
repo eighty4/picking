@@ -8,6 +8,7 @@ import 'controller.dart';
 import 'instrument.dart';
 import 'launch.dart';
 import 'routing.dart';
+import 'screen.dart';
 import 'theme.dart';
 import 'ui.dart';
 
@@ -31,16 +32,13 @@ RouterConfig<Object> buildRouter(PickingControllerApi controller) {
         ShellRoute(
             navigatorKey: _playNavKey,
             builder: (context, state, child) {
-              final theme = PickingThemeData.darkBlue();
-              return PickingTheme(
-                  theme: theme,
-                  child: InitializeInstrumentModel(
-                    child: Scaffold(
-                        backgroundColor: theme.backgroundColor,
-                        body: SafeArea(
-                            child: UserInterface(
-                                controller: controller, child: child))),
-                  ));
+              return InitializeInstrumentModel(
+                child: Scaffold(
+                    backgroundColor: PickingTheme.of(context).backgroundColor,
+                    body: SafeArea(
+                        child: UserInterface(
+                            controller: controller, child: child))),
+              );
             },
             routes: <RouteBase>[
               GoRoute(
@@ -73,19 +71,21 @@ class BadRouteRedirect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(message),
-        Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: MaterialButton(
-                onPressed: () {
-                  context.browseChords();
-                },
-                color: Colors.red,
-                child: const Text('Back')))
-      ],
+    return PickingScreen(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(message),
+          Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: MaterialButton(
+                  onPressed: () {
+                    context.browseChords();
+                  },
+                  color: Colors.red,
+                  child: const Text('Back')))
+        ],
+      ),
     );
   }
 }
