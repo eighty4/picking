@@ -24,6 +24,12 @@ RouterConfig<Object> buildRouter(PickingControllerApi controller) {
   return GoRouter(
       navigatorKey: _appNavKey,
       initialLocation: PickingRoutes.launch,
+      errorBuilder: (context, state) {
+        const routeNoun = kIsWeb ? 'page' : 'screen';
+        return const BadRouteRedirect(
+            "The $routeNoun you're trying to reach does not exist.",
+            buttonText: 'Start over');
+      },
       routes: [
         GoRoute(
           path: PickingRoutes.launch,
@@ -66,25 +72,27 @@ RouterConfig<Object> buildRouter(PickingControllerApi controller) {
 
 class BadRouteRedirect extends StatelessWidget {
   final String message;
+  final String buttonText;
 
-  const BadRouteRedirect(this.message, {super.key});
+  const BadRouteRedirect(this.message, {super.key, this.buttonText = 'Back'});
 
   @override
   Widget build(BuildContext context) {
-    return PickingScreen(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(message),
-          Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: MaterialButton(
-                  onPressed: () {
-                    context.browseChords();
-                  },
-                  color: Colors.red,
-                  child: const Text('Back')))
-        ],
+    return Scaffold(
+      body: PickingScreen(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(child: Text(message)),
+            const SizedBox(height: 20),
+            MaterialButton(
+                onPressed: () {
+                  context.browseChords();
+                },
+                color: Colors.red,
+                child: Text(buttonText)),
+          ],
+        ),
       ),
     );
   }
