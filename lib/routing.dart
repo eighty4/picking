@@ -4,11 +4,16 @@ import 'package:libtab/chord.dart';
 
 class PickingRoutes {
   static const launch = '/';
+  static const playMusic = '/play';
   static const browseChords = '/browse/chords';
   static const playChord = '/play/chord/:chord';
 }
 
 extension PickingNavigation on BuildContext {
+  playMusic() {
+    go(PickingRoutes.playMusic);
+  }
+
   browseChords() {
     go(PickingRoutes.browseChords);
   }

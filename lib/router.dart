@@ -7,6 +7,7 @@ import 'chords.dart';
 import 'controller.dart';
 import 'instrument.dart';
 import 'launch.dart';
+import 'play.dart';
 import 'routing.dart';
 import 'screen.dart';
 import 'theme.dart';
@@ -49,9 +50,7 @@ RouterConfig<Object> buildRouter(PickingControllerApi controller) {
             routes: <RouteBase>[
               GoRoute(
                 path: PickingRoutes.browseChords,
-                builder: (context, state) {
-                  return const ChordsMenuRoute();
-                },
+                builder: (context, state) => const ChordsMenuRoute(),
               ),
               GoRoute(
                 path: PickingRoutes.playChord,
@@ -65,6 +64,10 @@ RouterConfig<Object> buildRouter(PickingControllerApi controller) {
                         "We don't know how to play the \"$chordPathParam\" chord");
                   }
                 },
+              ),
+              GoRoute(
+                path: PickingRoutes.playMusic,
+                builder: (context, state) => const PlayMusic(),
               ),
             ])
       ]);

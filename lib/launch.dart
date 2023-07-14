@@ -83,7 +83,7 @@ class _InstrumentSelectionState extends State<InstrumentSelection> {
           child: GestureDetector(
               onTap: () {
                 PickingAppData.saveInstrument(widget.instrument);
-                context.browseChords();
+                context.playMusic();
               },
               child: InstrumentIcon(widget.instrument, height: widget.height))),
     ]);
