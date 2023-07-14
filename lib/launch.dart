@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'data.dart';
 import 'instrument.dart';
@@ -14,6 +15,7 @@ class LaunchRoute extends StatefulWidget {
 
 class _LaunchRouteState extends State<LaunchRoute> {
   bool waiting = true;
+  Instrument? instrument;
 
   @override
   void initState() {
@@ -42,50 +44,78 @@ class _LaunchRouteState extends State<LaunchRoute> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            InstrumentSelection(Instrument.banjo, height: instrumentHeight),
+            InstrumentSelection(Instrument.banjo,
+                focused: instrument == Instrument.banjo,
+                height: instrumentHeight,
+                onHover: focusBanjo,
+                onTap: selectInstrument),
             SizedBox(width: size.height * .1),
-            InstrumentSelection(Instrument.guitar, height: instrumentHeight),
+            InstrumentSelection(Instrument.guitar,
+                focused: instrument == Instrument.guitar,
+                height: instrumentHeight,
+                onHover: focusGuitar,
+                onTap: selectInstrument),
           ]);
     }
-    return PickingScreen(child: content);
+    return PickingScreen(
+        child: CallbackShortcuts(bindings: <LogicalKeySet, VoidCallback>{
+      LogicalKeySet(LogicalKeyboardKey.arrowLeft): focusBanjo,
+      LogicalKeySet(LogicalKeyboardKey.arrowRight): focusGuitar,
+      LogicalKeySet(LogicalKeyboardKey.enter): selectInstrument,
+    }, child: Focus(autofocus: true, child: content)));
+  }
+
+  focusBanjo() {
+    setState(() {
+      instrument = Instrument.banjo;
+    });
+  }
+
+  focusGuitar() {
+    setState(() {
+      instrument = Instrument.guitar;
+    });
+  }
+
+  selectInstrument() {
+    if (instrument != null) {
+      PickingAppData.saveInstrument(instrument!);
+      context.playMusic();
+    }
   }
 }
 
-class InstrumentSelection extends StatefulWidget {
+class InstrumentSelection extends StatelessWidget {
   final Instrument instrument;
   final double height;
+  final bool focused;
+  final VoidCallback onHover;
+  final VoidCallback onTap;
 
-  const InstrumentSelection(this.instrument, {super.key, required this.height});
-
-  @override
-  State<InstrumentSelection> createState() => _InstrumentSelectionState();
-}
-
-class _InstrumentSelectionState extends State<InstrumentSelection> {
-  bool focus = false;
+  const InstrumentSelection(this.instrument,
+      {super.key,
+      required this.height,
+      required this.focused,
+      required this.onHover,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Stack(clipBehavior: Clip.none, children: [
       AnimatedOpacity(
           duration: const Duration(milliseconds: 150),
-          opacity: focus ? 1 : 0,
+          opacity: focused ? 1 : 0,
           child: AnimatedScale(
             curve: Curves.decelerate,
-            scale: focus ? 1.1 : 0,
+            scale: focused ? 1.1 : 0,
             duration: const Duration(milliseconds: 150),
-            child: SizedBox.square(dimension: widget.height, child: CloudSvg()),
+            child: SizedBox.square(dimension: height, child: CloudSvg()),
           )),
       MouseRegion(
           cursor: SystemMouseCursors.click,
-          onEnter: (event) => setState(() => focus = true),
-          onExit: (event) => setState(() => focus = false),
+          onEnter: (event) => onHover(),
           child: GestureDetector(
-              onTap: () {
-                PickingAppData.saveInstrument(widget.instrument);
-                context.playMusic();
-              },
-              child: InstrumentIcon(widget.instrument, height: widget.height))),
+              onTap: onTap, child: InstrumentIcon(instrument, height: height))),
     ]);
   }
 }
