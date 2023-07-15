@@ -1,35 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:libtab/libtab.dart';
+import 'package:picking/routing.dart';
 
 import 'instrument.dart';
-import 'routing.dart';
 import 'screen.dart';
 import 'theme.dart';
 
-class ChordsMenuRoute extends StatefulWidget {
+class ChordsMenuRoute extends StatelessWidget {
   const ChordsMenuRoute({super.key});
-
-  @override
-  State<ChordsMenuRoute> createState() => _ChordsMenuRouteState();
-}
-
-class _ChordsMenuRouteState extends State<ChordsMenuRoute> {
-  int focused = -1;
 
   @override
   Widget build(BuildContext context) {
     final instrument = InstrumentModel.of(context);
-    final chords =
-        (instrument == Instrument.banjo ? banjoChordNotes : guitarChordNotes)
+    return ChordsMenuGrid(
+        chords: switch (instrument) {
+          Instrument.banjo => banjoChordNotes,
+          Instrument.guitar => guitarChordNotes,
+        }
             .keys
-            .toList(growable: false);
-    navToFocusedChord() {
-      if (focused > -1) {
-        context.playChord(chords[focused]);
-      }
-    }
+            .toList(growable: false),
+        instrument: instrument);
+  }
+}
 
+class ChordsMenuGrid extends StatefulWidget {
+  final List<Chord> chords;
+  final Instrument instrument;
+
+  const ChordsMenuGrid(
+      {super.key, required this.chords, required this.instrument});
+
+  @override
+  State<ChordsMenuGrid> createState() => _ChordsMenuGridState();
+}
+
+class _ChordsMenuGridState extends State<ChordsMenuGrid> {
+  late final List<FocusNode> focusNodes;
+  int focusedIndex = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    focusNodes = List.generate(widget.chords.length, (i) => FocusNode());
+  }
+
+  @override
+  void dispose() {
+    for (final focusNode in focusNodes) {
+      focusNode.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return PickingScreen(
         child: CallbackShortcuts(
       bindings: <LogicalKeySet, VoidCallback>{
@@ -40,25 +65,28 @@ class _ChordsMenuRouteState extends State<ChordsMenuRoute> {
         child: GridView.builder(
             shrinkWrap: true,
             padding: const EdgeInsets.all(50),
-            itemCount: chords.length,
+            itemCount: widget.chords.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,
             ),
             itemBuilder: (context, i) {
               return MouseRegion(
                 cursor: SystemMouseCursors.click,
-                onEnter: (event) => setFocusedIndex(i),
+                onEnter: (event) => setFocusOnHover(i),
                 child: GestureDetector(
                   onTap: navToFocusedChord,
                   child: Focus(
-                    onFocusChange: (focused) => setFocusedIndex(i),
+                    focusNode: focusNodes[i],
+                    onFocusChange: (focused) => onFocusChange(i, focused),
                     child: Container(
                       decoration: BoxDecoration(
                           border: Border.all(
-                              color: focused == i
+                              color: focusNodes[i].hasFocus
                                   ? Colors.red
                                   : Colors.transparent)),
-                      child: ChordWithLabel(chord: chords[i]),
+                      child: ChordWithLabel(
+                          chord: widget.chords[i],
+                          instrument: widget.instrument),
                     ),
                   ),
                 ),
@@ -68,10 +96,22 @@ class _ChordsMenuRouteState extends State<ChordsMenuRoute> {
     ));
   }
 
-  setFocusedIndex(int index) {
+  onFocusChange(int i, bool focused) {
     setState(() {
-      focused = index;
+      focusedIndex = focused ? i : -1;
     });
+  }
+
+  setFocusOnHover(int i) {
+    focusNodes[i].requestFocus();
+  }
+
+  navToFocusedChord() {
+    for (int i = 0; i < focusNodes.length; i++) {
+      if (focusNodes[i].hasFocus) {
+        context.playChord(widget.chords[i]);
+      }
+    }
   }
 }
 
@@ -82,19 +122,22 @@ class PlayChordRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PickingScreen(child: ChordWithLabel(chord: chord));
+    return PickingScreen(
+        child: ChordWithLabel(
+            chord: chord, instrument: InstrumentModel.of(context)));
   }
 }
 
 class ChordWithLabel extends StatelessWidget {
   final Chord chord;
+  final Instrument instrument;
 
-  const ChordWithLabel({super.key, required this.chord});
+  const ChordWithLabel(
+      {super.key, required this.chord, required this.instrument});
 
   @override
   Widget build(BuildContext context) {
     final tabContext = PickingTheme.of(context).tabContext();
-    final instrument = InstrumentModel.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
