@@ -52,6 +52,11 @@ class _UserInterfaceState extends State<UserInterface> {
 }
 
 class NavMenu extends StatefulWidget {
+  static const routes = <String, String>{
+    PickingRoutes.browseChords: "Chords",
+    PickingRoutes.browseTechniques: "Techniques",
+    PickingRoutes.browseSongs: "Songs",
+  };
   static const double height = 100;
 
   const NavMenu({super.key});
@@ -63,17 +68,14 @@ class NavMenu extends StatefulWidget {
 class _NavMenuState extends State<NavMenu> {
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
+    return SizedBox(
       height: NavMenu.height,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          MenuNavLink(text: 'Chords', path: PickingRoutes.browseChords),
-          MenuNavLink(text: 'Techniques', path: PickingRoutes.browseChords),
-          MenuNavLink(text: 'Songs', path: PickingRoutes.browseChords),
-          // MenuNavLink(icon: Icons.settings, path: PickingRoutes.settings),
-        ],
+        children: NavMenu.routes.keys.map((route) {
+          return MenuNavLink(text: NavMenu.routes[route], path: route);
+        }).toList(),
       ),
     );
   }

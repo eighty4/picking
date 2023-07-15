@@ -53,6 +53,16 @@ RouterConfig<Object> buildRouter(PickingControllerApi controller) {
                 builder: (context, state) => const ChordsMenuRoute(),
               ),
               GoRoute(
+                path: PickingRoutes.browseTechniques,
+                builder: (context, state) => const PlaceholderRoute(
+                    route: PickingRoutes.browseTechniques),
+              ),
+              GoRoute(
+                path: PickingRoutes.browseSongs,
+                builder: (context, state) => const PlaceholderRoute(
+                    route: PickingRoutes.browseSongs),
+              ),
+              GoRoute(
                 path: PickingRoutes.playChord,
                 builder: (context, state) {
                   final chordPathParam = state.pathParameters['chord']!;
@@ -71,6 +81,17 @@ RouterConfig<Object> buildRouter(PickingControllerApi controller) {
               ),
             ])
       ]);
+}
+
+class PlaceholderRoute extends StatelessWidget {
+  final String route;
+
+  const PlaceholderRoute({super.key, required this.route});
+
+  @override
+  Widget build(BuildContext context) {
+    return PickingScreen(child: Center(child: Text(route)));
+  }
 }
 
 class BadRouteRedirect extends StatelessWidget {

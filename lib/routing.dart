@@ -6,6 +6,8 @@ class PickingRoutes {
   static const launch = '/';
   static const playMusic = '/play';
   static const browseChords = '/browse/chords';
+  static const browseSongs = '/browse/songs';
+  static const browseTechniques = '/browse/techniques';
   static const playChord = '/play/chord/:chord';
 }
 
