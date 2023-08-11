@@ -59,8 +59,8 @@ RouterConfig<Object> buildRouter(PickingControllerApi controller) {
               ),
               GoRoute(
                 path: PickingRoutes.browseSongs,
-                builder: (context, state) => const PlaceholderRoute(
-                    route: PickingRoutes.browseSongs),
+                builder: (context, state) =>
+                    const PlaceholderRoute(route: PickingRoutes.browseSongs),
               ),
               GoRoute(
                 path: PickingRoutes.playChord,

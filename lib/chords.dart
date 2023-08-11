@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:libtab/libtab.dart';
-import 'package:picking/routing.dart';
 
 import 'instrument.dart';
+import 'routing.dart';
 import 'screen.dart';
 import 'theme.dart';
 
@@ -42,7 +42,8 @@ class _ChordsMenuGridState extends State<ChordsMenuGrid> {
   @override
   void initState() {
     super.initState();
-    focusNodes = List.generate(widget.chords.length, (i) => FocusNode());
+    focusNodes = List.generate(
+        widget.chords.length, (i) => FocusNode(debugLabel: 'chordFocusNode$i'));
   }
 
   @override
@@ -61,6 +62,7 @@ class _ChordsMenuGridState extends State<ChordsMenuGrid> {
         LogicalKeySet(LogicalKeyboardKey.enter): navToFocusedChord,
       },
       child: FocusScope(
+        debugLabel: 'chordsFocusScope',
         autofocus: true,
         child: GridView.builder(
             shrinkWrap: true,
@@ -76,6 +78,7 @@ class _ChordsMenuGridState extends State<ChordsMenuGrid> {
                 child: GestureDetector(
                   onTap: navToFocusedChord,
                   child: Focus(
+                    debugLabel: 'chordFocus$i',
                     focusNode: focusNodes[i],
                     onFocusChange: (focused) => onFocusChange(i, focused),
                     child: Container(
