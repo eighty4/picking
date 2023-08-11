@@ -13,6 +13,8 @@ import 'screen.dart';
 import 'theme.dart';
 import 'ui.dart';
 
+const initialLocation = PickingRoutes.launch;
+
 GlobalKey<NavigatorState> _appNavKey = GlobalKey();
 
 GlobalKey<NavigatorState> _playNavKey = GlobalKey();
@@ -24,7 +26,7 @@ RouterConfig<Object> buildRouter(PickingControllerApi controller) {
   }
   return GoRouter(
       navigatorKey: _appNavKey,
-      initialLocation: PickingRoutes.launch,
+      initialLocation: initialLocation,
       errorBuilder: (context, state) {
         const routeNoun = kIsWeb ? 'page' : 'screen';
         return const BadRouteRedirect(
