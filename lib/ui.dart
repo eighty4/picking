@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'controller.dart';
 import 'instrument.dart';
@@ -24,7 +26,7 @@ class _UserInterfaceState extends State<UserInterface> {
   void initState() {
     super.initState();
     widget.controller.navMenu.addListener(() {
-      setState(() => navMenuOpen = widget.controller.navMenu.open);
+      setState(() => navMenuOpen = widget.controller.navMenu.isOpen);
     });
   }
 
@@ -43,7 +45,7 @@ class _UserInterfaceState extends State<UserInterface> {
           left: 0,
           right: 0,
           child: Column(children: [
-            const NavMenu(),
+            NavMenu(controller: widget.controller.navMenu),
             SizedBox.fromSize(
                 size: MediaQuery.of(context).size, child: widget.child)
           ])),
@@ -51,33 +53,124 @@ class _UserInterfaceState extends State<UserInterface> {
   }
 }
 
-class NavMenu extends StatefulWidget {
-  static const routes = <String, String>{
-    PickingRoutes.browseChords: "Chords",
-    PickingRoutes.browseTechniques: "Techniques",
-    PickingRoutes.browseSongs: "Songs",
-  };
-  static const double height = 100;
+extension NavSectionFns on NavSection {
+  String label() => switch (this) {
+        NavSection.chords => 'Chords',
+        NavSection.techniques => 'Techniques',
+        NavSection.songs => 'Songs',
+      };
+}
 
-  const NavMenu({super.key});
+class NavMenu extends StatefulWidget {
+  static const double height = 100;
+  final NavMenuController controller;
+
+  const NavMenu({super.key, required this.controller});
 
   @override
   State<NavMenu> createState() => _NavMenuState();
 }
 
 class _NavMenuState extends State<NavMenu> {
+  final FocusScopeNode focusScopeNode = FocusScopeNode(
+    debugLabel: 'navMenuFocusScopeNode',
+  );
+  final Map<NavSection, FocusNode> focusNodes = Map.fromEntries([
+    MapEntry(
+        NavSection.chords, FocusNode(debugLabel: 'navMenuFocusNodeChords')),
+    MapEntry(NavSection.techniques,
+        FocusNode(debugLabel: 'navMenuFocusNodeTechniques')),
+    MapEntry(NavSection.songs, FocusNode(debugLabel: 'navMenuFocusNodeSongs')),
+  ]);
+  NavSection? focusedNavSection;
+  NavSection? hoveredNavSection;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(() {
+      setState(() {
+        if (widget.controller.isOpen) {
+          NavSection? toFocus = focusedNavSection;
+          toFocus ??= context.currentNavSection();
+          final toFocusFocusNode = toFocus == null ? null : focusNodes[toFocus];
+          focusScopeNode.requestFocus(toFocusFocusNode);
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    focusScopeNode.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: NavMenu.height,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: NavMenu.routes.keys.map((route) {
-          return MenuNavLink(text: NavMenu.routes[route], path: route);
-        }).toList(),
+    return CallbackShortcuts(
+        bindings: <LogicalKeySet, VoidCallback>{
+          LogicalKeySet(LogicalKeyboardKey.arrowDown): () {
+            PickingController.of(context).navMenu.close();
+          },
+          LogicalKeySet(LogicalKeyboardKey.enter): () {
+            if (focusedNavSection != null) {
+              nav(focusedNavSection!);
+            }
+            PickingController.of(context).navMenu.close();
+          },
+        },
+        child: FocusScope(
+          debugLabel: 'navMenuFocusScope',
+          node: focusScopeNode,
+          onFocusChange: (focused) {
+            if (kDebugMode) {
+              print('navMenuFocusScope $focused');
+            }
+          },
+          child: SizedBox(
+            height: NavMenu.height,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: NavSection.values.map(buildMenuNavLink).toList(),
+            ),
+          ),
+        ));
+  }
+
+  Widget buildMenuNavLink(NavSection navSection) {
+    return Focus(
+      focusNode: focusNodes[navSection],
+      onFocusChange: (focused) {
+        if (kDebugMode) {
+          print('navMenuFocusNode${navSection.label()}');
+        }
+        if (focused) {
+          setState(() => focusedNavSection = navSection);
+        }
+      },
+      child: GestureDetector(
+        onTap: () => nav(navSection),
+        child: MouseRegion(
+            onEnter: (e) => setState(() => hoveredNavSection = navSection),
+            onExit: (e) => setState(() => hoveredNavSection = null),
+            cursor: SystemMouseCursors.click,
+            child: MenuNavLink(
+                text: navSection.label(),
+                focused: navSection == focusedNavSection)),
       ),
     );
+  }
+
+  void nav(NavSection navSection) {
+    if (navSection == NavSection.chords) {
+      context.browseChords();
+    } else if (navSection == NavSection.techniques) {
+      context.browseChords();
+    } else if (navSection == NavSection.songs) {
+      context.browseChords();
+    }
   }
 }
 
@@ -90,7 +183,7 @@ class SelectedInstrument extends StatelessWidget {
   }
 }
 
-class MenuNavLink extends StatefulWidget {
+class MenuNavLink extends StatelessWidget {
   static const EdgeInsets iconPadding =
       EdgeInsets.only(left: 9, right: 9, bottom: 1);
   static const EdgeInsets textPadding =
@@ -98,44 +191,28 @@ class MenuNavLink extends StatefulWidget {
 
   final IconData? icon;
   final String? text;
-  final String path;
+  final bool focused;
 
-  const MenuNavLink({super.key, this.icon, this.text, required this.path})
+  const MenuNavLink({super.key, this.icon, this.text, required this.focused})
       : assert(icon != null || text != null);
-
-  @override
-  State<MenuNavLink> createState() => _MenuNavLinkState();
-}
-
-class _MenuNavLinkState extends State<MenuNavLink> {
-  bool hover = false;
 
   @override
   Widget build(BuildContext context) {
     final PickingThemeData theme = PickingTheme.of(context);
-    final Widget child = widget.text == null
-        ? Icon(widget.icon, size: 30, color: theme.textColor)
-        : Text(widget.text!, style: textStyle(theme.textColor));
+    final Widget child = text == null
+        ? Icon(icon, size: 30, color: theme.textColor)
+        : Text(text!, style: textStyle(theme.textColor));
     return Stack(children: [
-      MouseRegion(
-          onEnter: (event) => setState(() => hover = true),
-          onExit: (event) => setState(() => hover = false),
-          cursor: SystemMouseCursors.click,
-          child: GestureDetector(
-              onTap: () => context.navTo(widget.path),
-              child: Container(
-                  height: 50,
-                  padding: widget.text == null
-                      ? MenuNavLink.iconPadding
-                      : MenuNavLink.textPadding,
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          color: hover
-                              ? theme.navigationColor
-                              : Colors.transparent,
-                          width: 2),
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Center(child: child)))),
+      Container(
+          height: 50,
+          padding:
+              text == null ? MenuNavLink.iconPadding : MenuNavLink.textPadding,
+          decoration: BoxDecoration(
+              border: Border.all(
+                  color: focused ? theme.navigationColor : Colors.transparent,
+                  width: 2),
+              borderRadius: BorderRadius.circular(15)),
+          child: Center(child: child)),
     ]);
   }
 

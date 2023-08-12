@@ -2,6 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:libtab/chord.dart';
 
+enum NavSection { chords, songs, techniques }
+
 class PickingRoutes {
   static const launch = '/';
   static const playMusic = '/play';
@@ -24,7 +26,20 @@ extension PickingNavigation on BuildContext {
     go(PickingRoutes.playChord.replaceFirst(':chord', chord.name));
   }
 
-  navTo(String route) {
-    go(route);
+  String? currentRoute() => GoRouterState.of(this).fullPath;
+
+  NavSection? currentNavSection() {
+    final currentRoute = this.currentRoute();
+    if (currentRoute != null) {
+      if (currentRoute.startsWith('/browse/')) {
+        return switch (currentRoute.substring(8)) {
+          'chords' => NavSection.chords,
+          'techniques' => NavSection.techniques,
+          'songs' => NavSection.songs,
+          _ => null,
+        };
+      }
+    }
+    return null;
   }
 }

@@ -15,27 +15,28 @@ class PickingControllerApi {
 
 class NavMenuController extends ChangeNotifier
     implements ValueListenable<bool> {
-  bool open = false;
+  bool _open = false;
 
-  void openMenu() {
-    if (!open) {
-      toggleMenu();
+  void open() {
+    if (kDebugMode) {
+      print('NavMenuController.open');
     }
+    _open = true;
+    notifyListeners();
   }
 
-  void closeMenu() {
-    if (open) {
-      toggleMenu();
+  void close() {
+    if (kDebugMode) {
+      print('NavMenuController.close');
     }
-  }
-
-  void toggleMenu() {
-    open = !open;
+    _open = false;
     notifyListeners();
   }
 
   @override
-  bool get value => open;
+  bool get value => _open;
+
+  bool get isOpen => _open;
 }
 
 class PickingController extends InheritedWidget {
