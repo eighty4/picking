@@ -167,7 +167,7 @@ class _NavMenuState extends State<NavMenu> {
     if (navSection == NavSection.chords) {
       context.browseChords();
     } else if (navSection == NavSection.techniques) {
-      context.browseChords();
+      context.browseTechniques();
     } else if (navSection == NavSection.songs) {
       context.browseChords();
     }

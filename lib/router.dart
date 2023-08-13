@@ -10,6 +10,7 @@ import 'launch.dart';
 import 'play.dart';
 import 'routing.dart';
 import 'screen.dart';
+import 'techniques.dart';
 import 'theme.dart';
 import 'ui.dart';
 
@@ -56,8 +57,7 @@ RouterConfig<Object> buildRouter(PickingControllerApi controller) {
               ),
               GoRoute(
                 path: PickingRoutes.browseTechniques,
-                builder: (context, state) => const PlaceholderRoute(
-                    route: PickingRoutes.browseTechniques),
+                builder: (context, state) => const TechniquesMenuRoute(),
               ),
               GoRoute(
                 path: PickingRoutes.browseSongs,

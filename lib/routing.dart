@@ -22,6 +22,10 @@ extension PickingNavigation on BuildContext {
     go(PickingRoutes.browseChords);
   }
 
+  browseTechniques() {
+    go(PickingRoutes.browseTechniques);
+  }
+
   playChord(Chord chord) {
     go(PickingRoutes.playChord.replaceFirst(':chord', chord.name));
   }
