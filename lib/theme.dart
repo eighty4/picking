@@ -23,7 +23,7 @@ class PickingThemeData {
 
   factory PickingThemeData.darkBlue() {
     const black = Color.fromARGB(190, 0, 0, 0);
-    const darkBlue = Color.fromARGB(255, 2, 48, 71);
+    const darkBlue = Color.fromARGB(255, 8, 40, 70);
     const lightBlue = Color.fromARGB(255, 142, 202, 230);
     const red = Color.fromARGB(255, 250, 77, 77);
     const yellow = Color.fromARGB(255, 255, 183, 3);
