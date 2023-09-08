@@ -66,19 +66,3 @@ class PickingTheme extends InheritedWidget {
     return oldWidget.theme != theme;
   }
 }
-
-class ThemeStyledText extends StatelessWidget {
-  final TextStyle? style;
-  final String text;
-
-  const ThemeStyledText(this.text, {super.key, this.style});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = PickingTheme.of(context);
-    return Text(text,
-        style: style == null
-            ? TextStyle(color: theme.textColor)
-            : style!.copyWith(color: theme.textColor));
-  }
-}
