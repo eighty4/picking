@@ -40,22 +40,34 @@ class _LaunchRouteState extends State<LaunchRoute> {
     } else {
       final size = MediaQuery.of(context).size;
       final instrumentHeight = MediaQuery.of(context).size.height * .4;
-      content = Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            InstrumentSelection(Instrument.banjo,
-                focused: instrument == Instrument.banjo,
-                height: instrumentHeight,
-                onHover: focusBanjo,
-                onTap: selectInstrument),
-            SizedBox(width: size.height * .1),
-            InstrumentSelection(Instrument.guitar,
-                focused: instrument == Instrument.guitar,
-                height: instrumentHeight,
-                onHover: focusGuitar,
-                onTap: selectInstrument),
-          ]);
+      const textStyle = TextStyle(fontSize: 26);
+      content = Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+              "Pickin' is a companion app for beginning bluegrass players.",
+              style: textStyle),
+          const SizedBox(height: 20),
+          const Text('Choose an instrument to get started.', style: textStyle),
+          const SizedBox(height: 60),
+          Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                InstrumentSelection(Instrument.banjo,
+                    focused: instrument == Instrument.banjo,
+                    height: instrumentHeight,
+                    onHover: focusBanjo,
+                    onTap: selectInstrument),
+                SizedBox(width: size.height * .1),
+                InstrumentSelection(Instrument.guitar,
+                    focused: instrument == Instrument.guitar,
+                    height: instrumentHeight,
+                    onHover: focusGuitar,
+                    onTap: selectInstrument),
+              ]),
+        ],
+      );
     }
     return PickingScreen(
         child: CallbackShortcuts(bindings: <LogicalKeySet, VoidCallback>{
