@@ -11,7 +11,6 @@ import 'play.dart';
 import 'routing.dart';
 import 'screen.dart';
 import 'techniques.dart';
-import 'theme.dart';
 import 'ui.dart';
 
 const initialLocation = PickingRoutes.launch;
@@ -43,11 +42,8 @@ RouterConfig<Object> buildRouter(PickingControllerApi controller) {
             navigatorKey: _playNavKey,
             builder: (context, state, child) {
               return InitializeInstrumentModel(
-                child: Scaffold(
-                    backgroundColor: PickingTheme.of(context).backgroundColor,
-                    body: SafeArea(
-                        child: UserInterface(
-                            controller: controller, child: child))),
+                child: PickingScreen(
+                    child: UserInterface(controller: controller, child: child)),
               );
             },
             routes: <RouteBase>[
@@ -104,21 +100,19 @@ class BadRouteRedirect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PickingScreen(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(child: Text(message)),
-            const SizedBox(height: 20),
-            MaterialButton(
-                onPressed: () {
-                  context.browseChords();
-                },
-                color: Colors.red,
-                child: Text(buttonText)),
-          ],
-        ),
+    return PickingScreen(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(child: Text(message)),
+          const SizedBox(height: 20),
+          MaterialButton(
+              onPressed: () {
+                context.browseChords();
+              },
+              color: Colors.red,
+              child: Text(buttonText)),
+        ],
       ),
     );
   }

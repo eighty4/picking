@@ -9,7 +9,8 @@ class PickingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final background = PickingTheme.of(context).backgroundColor;
-    return Container(color: background, child: child);
+    final theme = PickingTheme.of(context);
+    return Scaffold(
+        backgroundColor: theme.backgroundColor, body: SafeArea(child: child));
   }
 }
