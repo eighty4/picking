@@ -27,12 +27,7 @@ RouterConfig<Object> buildRouter(PickingControllerApi controller) {
   return GoRouter(
       navigatorKey: _appNavKey,
       initialLocation: initialLocation,
-      errorBuilder: (context, state) {
-        const routeNoun = kIsWeb ? 'page' : 'screen';
-        return const BadRouteRedirect(
-            "The $routeNoun you're trying to reach does not exist.",
-            buttonText: 'Start over');
-      },
+      errorBuilder: (context, state) => const BadRouteRedirect.notFound(),
       routes: [
         GoRoute(
           path: PickingRoutes.launch,
@@ -49,11 +44,11 @@ RouterConfig<Object> buildRouter(PickingControllerApi controller) {
             routes: <RouteBase>[
               GoRoute(
                 path: PickingRoutes.browseChords,
-                builder: (context, state) => const ChordsMenuRoute(),
+                builder: (context, state) => const BrowseChords(),
               ),
               GoRoute(
                 path: PickingRoutes.browseTechniques,
-                builder: (context, state) => const TechniquesMenuRoute(),
+                builder: (context, state) => const BrowseTechniques(),
               ),
               GoRoute(
                 path: PickingRoutes.browseSongs,
@@ -65,8 +60,7 @@ RouterConfig<Object> buildRouter(PickingControllerApi controller) {
                 builder: (context, state) {
                   final chordPathParam = state.pathParameters['chord']!;
                   try {
-                    final chord = Chord.values.byName(chordPathParam);
-                    return PlayChordRoute(chord);
+                    return PlayChord(Chord.values.byName(chordPathParam));
                   } on ArgumentError {
                     return BadRouteRedirect(
                         "We don't know how to play the \"$chordPathParam\" chord");
@@ -88,7 +82,7 @@ class PlaceholderRoute extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PickingScreen(child: Center(child: Text(route)));
+    return Center(child: Text(route));
   }
 }
 
@@ -97,6 +91,11 @@ class BadRouteRedirect extends StatelessWidget {
   final String buttonText;
 
   const BadRouteRedirect(this.message, {super.key, this.buttonText = 'Back'});
+
+  const BadRouteRedirect.notFound({super.key})
+      : message =
+            "The ${kIsWeb ? 'page' : 'screen'} you're trying to reach does not exist.",
+        buttonText = 'Start over';
 
   @override
   Widget build(BuildContext context) {

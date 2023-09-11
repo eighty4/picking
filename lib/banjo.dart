@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:libtab/libtab.dart';
 
-import 'screen.dart';
 import 'theme.dart';
 
 class PlayBanjoRolls extends StatefulWidget {
@@ -67,8 +66,7 @@ class _PlayBanjoRollsState extends State<PlayBanjoRolls>
       },
       child: Focus(
         autofocus: true,
-        child: PickingScreen(
-            child: Center(
+        child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -107,7 +105,7 @@ class _PlayBanjoRollsState extends State<PlayBanjoRolls>
               ]),
             ],
           ),
-        )),
+        ),
       ),
     );
   }

@@ -5,11 +5,10 @@ import 'package:picking/browse.dart';
 import 'controller.dart';
 import 'instrument.dart';
 import 'routing.dart';
-import 'screen.dart';
 import 'theme.dart';
 
-class ChordsMenuRoute extends StatelessWidget {
-  const ChordsMenuRoute({super.key});
+class BrowseChords extends StatelessWidget {
+  const BrowseChords({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,28 +18,26 @@ class ChordsMenuRoute extends StatelessWidget {
       Instrument.guitar => guitarChordNotes,
     };
     final chords = chordNotes.keys.toList(growable: false);
-    return PickingScreen(
-        child: BrowsingGrid<Chord>(
+    return BrowsingGrid<Chord>(
       crossAxisCount: 4,
       controller: PickingController.of(context),
       itemBuilder: <Chord>(chord) =>
           ChordWithLabel(chord: chord, instrument: instrument),
       items: chords,
       onItemSelected: (chord) => context.playChord(chord),
-    ));
+    );
   }
 }
 
-class PlayChordRoute extends StatelessWidget {
+class PlayChord extends StatelessWidget {
   final Chord chord;
 
-  const PlayChordRoute(this.chord, {super.key});
+  const PlayChord(this.chord, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return PickingScreen(
-        child: ChordWithLabel(
-            chord: chord, instrument: InstrumentModel.of(context)));
+    return ChordWithLabel(
+        chord: chord, instrument: InstrumentModel.of(context));
   }
 }
 
