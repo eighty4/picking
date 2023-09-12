@@ -6,7 +6,7 @@
     "background_color": "#082826",
     "theme_color": "#fa4d4d",
     "description": "Play banjo and guitar bluegrass",
-    "orientation": "portrait-primary",
+    "orientation": "landscape",
     "prefer_related_applications": false,
     "icons": [
         {
