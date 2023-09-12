@@ -25,6 +25,9 @@ class PickingApp extends StatelessWidget {
         child: PickingController(
             controller: controller,
             child: MaterialApp.router(
+                title: kIsWeb
+                    ? "Picking - bluegrass banjo & guitar for beginners"
+                    : "Picking",
                 theme: ThemeData.light(useMaterial3: true),
                 darkTheme: ThemeData.dark(useMaterial3: true),
                 routerConfig: buildRouter(controller))),
