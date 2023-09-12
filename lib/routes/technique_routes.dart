@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:libtab/libtab.dart';
-
-import 'browse.dart';
-import 'controller.dart';
+import 'package:picking/browse.dart';
+import 'package:picking/controller.dart';
 
 class BrowseTechniques extends StatelessWidget {
   const BrowseTechniques({super.key});

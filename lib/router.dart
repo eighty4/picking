@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:libtab/libtab.dart';
 
-import 'chords.dart';
 import 'controller.dart';
 import 'instrument.dart';
-import 'launch.dart';
-import 'play.dart';
+import 'routes/chord_routes.dart';
+import 'routes/launch_route.dart';
+import 'routes/play_route.dart';
+import 'routes/technique_routes.dart';
 import 'routing.dart';
 import 'screen.dart';
-import 'techniques.dart';
 import 'theme.dart';
 import 'ui.dart';
 

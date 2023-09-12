@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
-import 'banjo.dart';
-import 'guitar.dart';
-import 'instrument.dart';
+import 'package:picking/banjo.dart';
+import 'package:picking/guitar.dart';
+import 'package:picking/instrument.dart';
 
 class PlayMusic extends StatefulWidget {
   const PlayMusic({super.key});

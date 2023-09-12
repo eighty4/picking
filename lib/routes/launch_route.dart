@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'data.dart';
-import 'instrument.dart';
-import 'routing.dart';
-import 'screen.dart';
+import 'package:picking/data.dart';
+import 'package:picking/instrument.dart';
+import 'package:picking/routing.dart';
+import 'package:picking/screen.dart';
 
 class LaunchRoute extends StatefulWidget {
   const LaunchRoute({super.key});

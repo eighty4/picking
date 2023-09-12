@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:libtab/libtab.dart';
 import 'package:picking/browse.dart';
-
-import 'controller.dart';
-import 'instrument.dart';
-import 'routing.dart';
-import 'theme.dart';
+import 'package:picking/controller.dart';
+import 'package:picking/instrument.dart';
+import 'package:picking/routing.dart';
+import 'package:picking/theme.dart';
 
 class BrowseChords extends StatelessWidget {
   const BrowseChords({super.key});
