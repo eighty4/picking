@@ -19,14 +19,16 @@ class PickingApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = PickingControllerApi();
-    return PickingTheme(
-      theme: PickingThemeData.darkBlue(),
-      child: PickingController(
-          controller: controller,
-          child: MaterialApp.router(
-              theme: ThemeData.light(useMaterial3: true),
-              darkTheme: ThemeData.dark(useMaterial3: true),
-              routerConfig: buildRouter(controller))),
+    return FontPreload(
+      child: PickingTheme(
+        theme: PickingThemeData.darkBlue(),
+        child: PickingController(
+            controller: controller,
+            child: MaterialApp.router(
+                theme: ThemeData.light(useMaterial3: true),
+                darkTheme: ThemeData.dark(useMaterial3: true),
+                routerConfig: buildRouter(controller))),
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:libtab/libtab.dart';
 
 class PickingThemeData {
@@ -67,5 +68,35 @@ class PickingTheme extends InheritedWidget {
   @override
   bool updateShouldNotify(PickingTheme oldWidget) {
     return oldWidget.theme != theme;
+  }
+}
+
+class FontPreload extends StatefulWidget {
+  final Widget child;
+
+  const FontPreload({super.key, required this.child});
+
+  @override
+  State<FontPreload> createState() => _FontPreloadState();
+}
+
+class _FontPreloadState extends State<FontPreload> {
+  late final Future loadingFonts;
+
+  @override
+  void initState() {
+    super.initState();
+    loadingFonts = GoogleFonts.pendingFonts([
+      GoogleFonts.cormorant(),
+    ]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: loadingFonts,
+        builder: (context, snapshot) {
+          return widget.child;
+        });
   }
 }
