@@ -11,6 +11,7 @@ import 'play.dart';
 import 'routing.dart';
 import 'screen.dart';
 import 'techniques.dart';
+import 'theme.dart';
 import 'ui.dart';
 
 const initialLocation = PickingRoutes.launch;
@@ -27,7 +28,8 @@ RouterConfig<Object> buildRouter(PickingControllerApi controller) {
   return GoRouter(
       navigatorKey: _appNavKey,
       initialLocation: initialLocation,
-      errorBuilder: (context, state) => const BadRouteRedirect.notFound(),
+      errorBuilder: (context, state) =>
+          const PickingScreen(child: BadRouteRedirect.notFound()),
       routes: [
         GoRoute(
           path: PickingRoutes.launch,
@@ -99,20 +101,19 @@ class BadRouteRedirect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PickingScreen(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(child: Text(message)),
-          const SizedBox(height: 20),
-          MaterialButton(
-              onPressed: () {
-                context.browseChords();
-              },
-              color: Colors.red,
-              child: Text(buttonText)),
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Center(child: Text(message)),
+        const SizedBox(height: 20),
+        MaterialButton(
+            onPressed: () {
+              context.browseChords();
+            },
+            // todo can this be configured with a material app theme?
+            color: PickingTheme.of(context).actionColor,
+            child: Text(buttonText)),
+      ],
     );
   }
 }

@@ -14,6 +14,10 @@ class PickingRoutes {
 }
 
 extension PickingNavigation on BuildContext {
+  launch() {
+    go(PickingRoutes.launch);
+  }
+
   playMusic() {
     go(PickingRoutes.playMusic);
   }

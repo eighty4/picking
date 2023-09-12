@@ -28,15 +28,16 @@ flutter:
     - assets/Cloud.svg
     - assets/Guitar.svg
 
-flutter_icons:
+flutter_launcher_icons:
 #  android: true
 #  ios: true
 #  remove_alpha_ios: true
 #  image_path: assets/icon.png
-#  web:
-#    generate: true
-#    background_color: '#ffffff'
-#    theme_color: '#ffffff'
+  web:
+    generate: true
+    image_path: assets/icon.png
+    background_color: '#082826'
+    theme_color: '#fa4d4d'
   macos:
     generate: true
     image_path: assets/icon.png

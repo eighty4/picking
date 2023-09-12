@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:libtab/libtab.dart';
 
 class PickingThemeData {
+  final Color actionColor;
   final Color backgroundColor;
   final Color chartColor;
   final Color metronomeBarColor;
@@ -12,7 +13,8 @@ class PickingThemeData {
   final Color textColor;
 
   const PickingThemeData(
-      {required this.backgroundColor,
+      {required this.actionColor,
+      required this.backgroundColor,
       required this.chartColor,
       required this.metronomeBarColor,
       required this.metronomeNoteColor,
@@ -29,6 +31,7 @@ class PickingThemeData {
     const yellow = Color.fromARGB(255, 255, 183, 3);
     const white = Colors.white;
     return const PickingThemeData(
+      actionColor: red,
       backgroundColor: darkBlue,
       chartColor: lightBlue,
       metronomeBarColor: red,
