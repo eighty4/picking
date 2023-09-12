@@ -34,7 +34,7 @@ jobs:
           flutter-version: ${{ env.flutter-version }}
           channel: 'stable'
       - name: build web
-        run: flutter build web
+        run: flutter build web --release
       - name: setup pages
         uses: actions/configure-pages@v3
       - name: upload artifact

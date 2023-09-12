@@ -27,6 +27,7 @@ flutter:
     - assets/Banjo.svg
     - assets/Cloud.svg
     - assets/Guitar.svg
+    - assets/fonts/Cormorant/
 
 flutter_launcher_icons:
 #  android: true

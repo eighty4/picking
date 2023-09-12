@@ -1,10 +1,15 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'controller.dart';
 import 'router.dart';
 import 'theme.dart';
 
 void main() {
+  if (kReleaseMode) {
+    GoogleFonts.config.allowRuntimeFetching = false;
+  }
   runApp(const PickingApp());
 }
 
