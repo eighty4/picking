@@ -19,7 +19,7 @@
       height: 100%;
       overflow: hidden;
     }
-    h1, h2, html, body {
+    h1, html, body {
       margin: 0;
       padding: 0;
     }
@@ -31,18 +31,18 @@
       align-items: center;
       height: 100%;
       width: 100%;
+      opacity: 1;
+      transition: opacity .2s;
     }
-    .header {
+    #preload.remove {
+      opacity: 0;
+    }
+    #header {
       color: #fff;
       font-family: Georgia, serif;
       letter-spacing: .15rem;
-      font-weight: 400;
-    }
-    h1.header {
       font-size: 1.75rem;
-    }
-    h2.header {
-      font-size: 1.5rem;
+      font-weight: 400;
     }
     #image {
       border-radius: 1rem;
@@ -58,9 +58,8 @@
 </head>
 <body>
   <div id="preload">
-    <h1 class="header">Picking</h1>
+    <h1 id="header">Picking</h1>
     <img id="image" src="/icons/Icon-192.png"/>
-    <h2 class="header">Bluegrass banjo and guitar for beginners</h2>
   </div>
   <script>
     window.addEventListener('load', function(ev) {
@@ -69,6 +68,7 @@
           serviceWorkerVersion: serviceWorkerVersion,
         },
         onEntrypointLoaded: function(engineInitializer) {
+          document.getElementById('preload').classList.add('remove')
           engineInitializer.initializeEngine().then(function(appRunner) {
             appRunner.runApp();
           });
