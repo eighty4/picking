@@ -31,23 +31,55 @@
 
   <title>Picking - bluegrass banjo & guitar for beginners</title>
   <link rel="manifest" href="manifest.json">
-
   <script>
     // The value below is injected by flutter build, do not touch.
     var serviceWorkerVersion = null;
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
+  <style rel="stylesheet">
+    html {
+      background: rgb(8, 40, 70);
+    }
+    html, body {
+      height: 100%;
+    }
+    #preload {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      width: 100%;
+    }
+    #status {
+      color: #fff;
+      font-family: Georgia, serif;
+      font-size: 1.5rem;
+      letter-spacing: .1rem;
+    }
+    #image {
+      border-radius: 1rem;
+    }
+  </style>
 </head>
 <body>
+  <div id="preload">
+    <img id="image" src="/icons/Icon-192.png"/>
+    <div id="status"></div>
+  </div>
   <script>
     window.addEventListener('load', function(ev) {
+      const status = document.getElementById('status')
       // Download main.dart.js
+      status.textContent = 'Downloading'
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         },
         onEntrypointLoaded: function(engineInitializer) {
+          status.textContent = 'Launching'
           engineInitializer.initializeEngine().then(function(appRunner) {
             appRunner.runApp();
           });
